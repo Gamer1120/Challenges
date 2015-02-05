@@ -5,15 +5,7 @@ import java.util.HashMap;
 
 public class MyProxy extends PrivacyProxy {
 
-	//////////////////////////////////////////////////////////////////////////
-	//
-	// Enhance your proxy by implementing the following three methods:
-	//   - manipulateRequestHeaders
-	//   - onRequest
-	//   - onResponse
-	//
-	//////////////////////////////////////////////////////////////////////////
-
+	// Some constants, used for the onRequest method.
 	public static final String USERAGENT = "User-Agent";
 	public static final String CPU = "UA-CPU";
 	public static final String ACCEPT = "Accept";
@@ -22,10 +14,17 @@ public class MyProxy extends PrivacyProxy {
 	public static final String HOST = "Host";
 	public static final String ACCEPTENCODING = "Accept-Encoding";
 
+	/**
+	 * Filters a request sent by a client, before it gets sent to the webserver.
+	 * It changes the text in the headers of Accept-Encoding, User-Agent,
+	 * UA-CPU, Referer, Cookie and Host to be more privacy-friendly. The
+	 * incoming headers are also printed on the console.
+	 * 
+	 * @param requestHeaders
+	 *            The headers to be changed.
+	 */
 	protected HashMap<String, String> onRequest(
 			HashMap<String, String> requestHeaders) {
-
-		// print all the request headers 
 		for (String header : requestHeaders.keySet()) {
 			switch (header) {
 			case ACCEPTENCODING:
@@ -56,16 +55,22 @@ public class MyProxy extends PrivacyProxy {
 			}
 			log("  REQ: " + header + ": " + requestHeaders.get(header));
 		}
-
 		return requestHeaders;
-
-		// return the (manipulated) headers, or
-		// alternatively, drop this request by returning null
-		// return null;
 	}
 
-	// The number of valid bytes in the buffer is expressed by the inOctets instance variable
-	// e.g. log("I received " + this.inOctets + " bytes");
+	// Some constants, used for the onResponse method.
+	public static final String CONTENTTYPE = "Content-Type";
+
+	/**
+	 * Filters a webpage fetched from a server. If the server sent the webpage
+	 * with the "deflate" encoding, scripts and iframes will be removed. The
+	 * site will be sent to the client afterwards. If a different encoding was
+	 * used, the website will be sent to the client normally. The headers are
+	 * also printed to the console.
+	 * 
+	 * @param originalBytes
+	 *            The bytes received from the server.
+	 */
 	protected byte[] onResponse(byte[] originalBytes) {
 		byte[] alteredBytes = originalBytes;
 		log("I received " + this.inOctets + " bytes");
@@ -73,9 +78,8 @@ public class MyProxy extends PrivacyProxy {
 		boolean encoding = true;
 		for (String header : responseHeaders.keySet()) {
 			log("  RSP: " + header + ": " + responseHeaders.get(header));
-			if (header.equals("Content-Type")
-					&& responseHeaders.get("Content-Type").startsWith(
-							"text/html")) {
+			if (header.equals(CONTENTTYPE)
+					&& responseHeaders.get(CONTENTTYPE).startsWith("text/html")) {
 				content = true;
 			} else if (header.equals("Content-Encoding")) {
 				encoding = responseHeaders.get("Content-Encoding").equals(
@@ -104,11 +108,30 @@ public class MyProxy extends PrivacyProxy {
 		return alteredBytes;
 	}
 
-	// Constructor, no need to touch this
+	/**
+	 * Creates a new proxy with the given socket. It can also automatically
+	 * flush.
+	 * 
+	 * @param socket
+	 *            The socket for this proxy.
+	 * @param autoFlush
+	 *            Whether this proxy should automatically flush.
+	 */
 	public MyProxy(Socket socket, Boolean autoFlush) {
 		super(socket, autoFlush);
 	}
 
+	/**
+	 * Removes the substring from s, starting after start and ending before end.
+	 * 
+	 * @param s
+	 *            The String the substring should be removed for.
+	 * @param start
+	 *            The String after which the substring should be removed.
+	 * @param end
+	 *            The String before which the substring should be removed.
+	 * @return The original string, with the substring removed from it.
+	 */
 	private String removeSubString(String s, String start, String end) {
 		return s.replaceAll("(?s)" + start + ".*?<" + end, "");
 	}
