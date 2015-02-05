@@ -20,6 +20,7 @@ public class MyProxy extends PrivacyProxy {
 	public static final String REFERER = "Referer";
 	public static final String COOKIE = "Cookie";
 	public static final String HOST = "Host";
+	public static final String ACCEPTENCODING = "Accept-Encoding";
 
 	protected HashMap<String, String> onRequest(
 			HashMap<String, String> requestHeaders) {
@@ -27,6 +28,9 @@ public class MyProxy extends PrivacyProxy {
 		// print all the request headers 
 		for (String header : requestHeaders.keySet()) {
 			switch (header) {
+			case ACCEPTENCODING:
+				requestHeaders.put(ACCEPTENCODING, "deflate");
+				break;
 			case USERAGENT:
 				requestHeaders.put(USERAGENT, "Mozilla/5.0 (Trident/7.0)");
 				break;
@@ -68,6 +72,13 @@ public class MyProxy extends PrivacyProxy {
 
 		for (String header : responseHeaders.keySet()) {
 			log("  RSP: " + header + ": " + responseHeaders.get(header));
+			if (header.equals("Content-Type")
+					&& responseHeaders.get("Content-Type").startsWith(
+							"text/html")) {
+				String s = new String(originalBytes);
+				String s2 = s.replaceAll("request", "Nieuws!");
+				alteredBytes = s2.getBytes();
+			}
 		}
 
 		// alter the original response and return it
