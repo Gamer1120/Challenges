@@ -44,7 +44,8 @@ public class MyProxy extends PrivacyProxy {
 				if (hostname.contains("google-analytics")
 						|| hostname.contains("googleads")
 						|| hostname.contains("googletagmanager")
-						|| hostname.contains("connect.facebook.net")) {
+						|| hostname.contains("connect.facebook.net")
+						|| hostname.contains("shackle.nl")) {
 					return null;
 				}
 				break;
