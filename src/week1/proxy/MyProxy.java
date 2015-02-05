@@ -47,7 +47,9 @@ public class MyProxy extends PrivacyProxy {
 			case HOST:
 				String hostname = requestHeaders.get(header);
 				if (hostname.contains("google-analytics")
-						|| hostname.contains("googleads")) {
+						|| hostname.contains("googleads")
+						|| hostname.contains("googletagmanager")
+						|| hostname.contains("connect.facebook.net")) {
 					return null;
 				}
 				break;
