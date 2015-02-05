@@ -19,6 +19,7 @@ public class MyProxy extends PrivacyProxy {
 	public static final String ACCEPT = "Accept";
 	public static final String REFERER = "Referer";
 	public static final String COOKIE = "Cookie";
+	public static final String HOST = "Host";
 
 	protected HashMap<String, String> onRequest(
 			HashMap<String, String> requestHeaders) {
@@ -42,6 +43,13 @@ public class MyProxy extends PrivacyProxy {
 				break;
 			case COOKIE:
 				requestHeaders.put(COOKIE, "");
+				break;
+			case HOST:
+				String hostname = requestHeaders.get(header);
+				if (hostname.contains("google-analytics")
+						|| hostname.contains("googleads")) {
+					return null;
+				}
 				break;
 			}
 			log("  REQ: " + header + ": " + requestHeaders.get(header));
