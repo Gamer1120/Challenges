@@ -1,5 +1,8 @@
 package proxy;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
@@ -76,7 +79,14 @@ public class MyProxy extends PrivacyProxy {
 					&& responseHeaders.get("Content-Type").startsWith(
 							"text/html")) {
 				String s = new String(originalBytes);
-				String s2 = s.replaceAll("request", "Nieuws!");
+				try {
+					BufferedWriter bw = new BufferedWriter(new FileWriter("ding.txt"));
+					bw.write(s);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String s2 = s.replaceAll("request", "Kappa");
 				alteredBytes = s2.getBytes();
 			}
 		}
