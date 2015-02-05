@@ -16,7 +16,7 @@ public class MyProxy extends PrivacyProxy {
 
 	public static final String USERAGENT = "User-Agent";
 	public static final String COOKIE = "Cookie";
-	public static final String RESOLUTION = "";
+	public static final String REFERER = "Referer";
 
 	protected HashMap<String, String> onRequest(
 			HashMap<String, String> requestHeaders) {
@@ -30,6 +30,8 @@ public class MyProxy extends PrivacyProxy {
 			case COOKIE:
 				requestHeaders.put(COOKIE, "");
 				break;
+			case REFERER:
+				requestHeaders.put(REFERER, "");
 			}
 			log("  REQ: " + header + ": " + requestHeaders.get(header));
 		}
@@ -60,8 +62,7 @@ public class MyProxy extends PrivacyProxy {
 				changed = false;
 			}
 			if (changed) {
-				log("  DIFRSP: " + header + ": "
-						+ responseHeaders.get(header));
+				log("  DIFRSP: " + header + ": " + responseHeaders.get(header));
 			}
 		}
 
