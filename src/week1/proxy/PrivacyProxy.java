@@ -143,7 +143,7 @@ public abstract class PrivacyProxy extends Thread {
 				}
 
 				log("Request for: " + urlToCall);
-				if (!urlToCall.contains(".js")) {
+				if (!urlToCall.contains(".js") && !urlToCall.contains("plugins")) {
 					requestHeaders = onRequest(requestHeaders);
 				} else {
 					requestHeaders = null;
