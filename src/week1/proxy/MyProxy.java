@@ -60,6 +60,7 @@ public class MyProxy extends PrivacyProxy {
 
 	// Some constants, used for the onResponse method.
 	public static final String CONTENTTYPE = "Content-Type";
+	public static final String CONTENTENCODING = "Content-Encoding";
 
 	/**
 	 * Filters a webpage fetched from a server. If the server sent the webpage
@@ -81,8 +82,8 @@ public class MyProxy extends PrivacyProxy {
 			if (header.equals(CONTENTTYPE)
 					&& responseHeaders.get(CONTENTTYPE).startsWith("text/html")) {
 				content = true;
-			} else if (header.equals("Content-Encoding")) {
-				encoding = responseHeaders.get("Content-Encoding").equals(
+			} else if (header.equals(CONTENTENCODING)) {
+				encoding = responseHeaders.get(CONTENTENCODING).equals(
 						"deflate");
 			}
 		}
