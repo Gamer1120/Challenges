@@ -62,8 +62,6 @@ public class MyProxy extends PrivacyProxy {
 		// return null;
 	}
 
-	public static final String SETCOOKIE = "Set-Cookie";
-
 	// The number of valid bytes in the buffer is expressed by the inOctets instance variable
 	// e.g. log("I received " + this.inOctets + " bytes");
 	protected byte[] onResponse(byte[] originalBytes) {
