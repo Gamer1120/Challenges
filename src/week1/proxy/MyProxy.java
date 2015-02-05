@@ -15,6 +15,8 @@ public class MyProxy extends PrivacyProxy {
 	//////////////////////////////////////////////////////////////////////////
 
 	public static final String USERAGENT = "User-Agent";
+	public static final String COOKIE = "Cookie";
+	public static final String RESOLUTION = "";
 
 	protected HashMap<String, String> onRequest(
 			HashMap<String, String> requestHeaders) {
@@ -24,6 +26,9 @@ public class MyProxy extends PrivacyProxy {
 			switch (header) {
 			case USERAGENT:
 				requestHeaders.put(USERAGENT, "Mozilla/5.0");
+				break;
+			case COOKIE:
+				requestHeaders.put(COOKIE, "");
 				break;
 			}
 			log("  REQ: " + header + ": " + requestHeaders.get(header));
@@ -36,6 +41,8 @@ public class MyProxy extends PrivacyProxy {
 		// return null;
 	}
 
+	public static final String SETCOOKIE = "Set-Cookie";
+
 	// The number of valid bytes in the buffer is expressed by the inOctets instance variable
 	// e.g. log("I received " + this.inOctets + " bytes");
 	protected byte[] onResponse(byte[] originalBytes) {
@@ -43,16 +50,19 @@ public class MyProxy extends PrivacyProxy {
 		log("I received " + this.inOctets + " bytes");
 
 		for (String header : responseHeaders.keySet()) {
+			boolean changed = true;
 			log("  RSP: " + header + ": " + responseHeaders.get(header));
-
-			if (header.equals("Content-Type")
-					&& responseHeaders.get("Content-Type").startsWith(
-							"text/html")) {
-				//String s = new String(originalBytes);
-				//String s2 = s.replaceAll("Nieuws", "Nieuws!");
-				//alteredBytes = s2.getBytes();
+			switch (header) {
+			case SETCOOKIE:
+				responseHeaders.put(SETCOOKIE, "");
+				break;
+			default:
+				changed = false;
 			}
-
+			if (changed) {
+				log("  DIFRSP: " + header + ": "
+						+ responseHeaders.get(header));
+			}
 		}
 
 		// alter the original response and return it
