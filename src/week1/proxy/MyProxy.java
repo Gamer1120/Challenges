@@ -28,7 +28,7 @@ public class MyProxy extends PrivacyProxy {
 		for (String header : requestHeaders.keySet()) {
 			switch (header) {
 			case USERAGENT:
-				requestHeaders.put(USERAGENT, "Mozilla/5.0");
+				requestHeaders.put(USERAGENT, "Mozilla/5.0 (Trident/7.0)");
 				break;
 			case CPU:
 				requestHeaders.put(CPU, "");
