@@ -105,9 +105,7 @@ public class MyProxy extends PrivacyProxy {
 		int begin = s.indexOf(start);
 		int eind = s.indexOf(end) + end.length();
 		while (begin >= 0 && eind >= 0) {
-			String eersteHelft = s.substring(0, begin);
-			String tweedeHelft = s.substring(eind, s.length() - 1);
-			s = eersteHelft + tweedeHelft;
+			s = s.substring(0, begin) + s.substring(eind, s.length() - 1);
 			begin = s.indexOf(start);
 			eind = s.indexOf(end) + end.length();
 		}
