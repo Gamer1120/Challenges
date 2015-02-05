@@ -84,7 +84,19 @@ public class MyProxy extends PrivacyProxy {
 		}
 		if (content && encoding) {
 			String s = new String(originalBytes);
-			s = removeSubString(s, "<script", "/script>");
+			s = s.replaceAll(" navigator.appCodeName ", " ''unknown'' ");
+			s = s.replaceAll(" navigator.appName ", " 'unknown' ");
+			s = s.replaceAll(" navigator.appVersion ", " 'unknown' ");
+			s = s.replaceAll(" navigator.cookieEnabled ", " 'unknown' ");
+			s = s.replaceAll(" navigator.geolocation ", " 'unknown' ");
+			s = s.replaceAll(" navigator.language ", " 'unknown' ");
+			s = s.replaceAll(" navigator.onLine ", " 'unknown' ");
+			s = s.replaceAll(" navigator.platform ", " 'unknown' ");
+			s = s.replaceAll(" navigator.product ", " 'unknown' ");
+			s = s.replaceAll(" navigator.userAgent ", " 'unknown' ");
+			s = s.replaceAll(" screen.height ", " 'unknown' ");
+			s = s.replaceAll(" screen.width ", " 'unknown' ");
+			s = removeSubString(s, "<div id=\"ad", "/div>");
 			s = removeSubString(s, "<iframe", "/iframe>");
 			alteredBytes = s.getBytes();
 		}
