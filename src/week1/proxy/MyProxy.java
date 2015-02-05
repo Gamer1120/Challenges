@@ -15,6 +15,7 @@ public class MyProxy extends PrivacyProxy {
 	//////////////////////////////////////////////////////////////////////////
 
 	public static final String USERAGENT = "User-Agent";
+	public static final String CPU = "UA-CPU";
 	public static final String ACCEPT = "Accept";
 	public static final String REFERER = "Referer";
 	public static final String COOKIE = "Cookie";
@@ -28,6 +29,9 @@ public class MyProxy extends PrivacyProxy {
 			switch (header) {
 			case USERAGENT:
 				requestHeaders.put(USERAGENT, "Mozilla/5.0");
+				break;
+			case CPU:
+				requestHeaders.put(CPU, "");
 				break;
 			case ACCEPT:
 				if (requestHeaders.get(header).contains("application/javascript")) {
