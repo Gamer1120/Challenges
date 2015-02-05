@@ -79,15 +79,7 @@ public class MyProxy extends PrivacyProxy {
 					&& responseHeaders.get("Content-Type").startsWith(
 							"text/html")) {
 				String s = new String(originalBytes);
-				removeSubString (s, "<script", "/script>");
-				try {
-					BufferedWriter bw = new BufferedWriter(new FileWriter(
-							"ding.txt"));
-					bw.write(s);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				s = removeSubString (s, "<script", "/script>");
 				alteredBytes = s.getBytes();
 			}
 		}
