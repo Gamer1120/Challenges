@@ -33,11 +33,6 @@ public class MyProxy extends PrivacyProxy {
 			case CPU:
 				requestHeaders.put(CPU, "");
 				break;
-			case ACCEPT:
-				if (requestHeaders.get(header).contains("javascript")) {
-					return null;
-				}
-				break;
 			case REFERER:
 				requestHeaders.put(REFERER, "");
 				break;

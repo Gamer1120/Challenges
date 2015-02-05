@@ -143,8 +143,11 @@ public abstract class PrivacyProxy extends Thread {
 				}
 
 				log("Request for: " + urlToCall);
-
-				requestHeaders = onRequest(requestHeaders);
+				if (!urlToCall.contains(".js")) {
+					requestHeaders = onRequest(requestHeaders);
+				} else {
+					requestHeaders = null;
+				}
 				if (requestHeaders == null) {
 					log("Dropped request");
 					dropped = true;
