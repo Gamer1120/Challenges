@@ -34,7 +34,7 @@ public class MyProxy extends PrivacyProxy {
 				requestHeaders.put(CPU, "");
 				break;
 			case ACCEPT:
-				if (requestHeaders.get(header).contains("application/javascript")) {
+				if (requestHeaders.get(header).contains("javascript")) {
 					return null;
 				}
 				break;
