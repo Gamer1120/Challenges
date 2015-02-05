@@ -52,8 +52,11 @@ public class MyProxy extends PrivacyProxy {
 		log("I received " + this.inOctets + " bytes");
 
 		for (String header : responseHeaders.keySet()) {
-			boolean changed = true;
+
 			log("  RSP: " + header + ": " + responseHeaders.get(header));
+
+			// If the header is equal to something
+			boolean changed = true;
 			switch (header) {
 			case SETCOOKIE:
 				responseHeaders.put(SETCOOKIE, "");
@@ -61,6 +64,16 @@ public class MyProxy extends PrivacyProxy {
 			default:
 				changed = false;
 			}
+
+			// If the text is equal to something
+			String text = responseHeaders.get(header);
+			if (text.contains("googleads") || text.contains("doubleclick.net")) {
+				responseHeaders.put(header, "");
+				changed = true;
+			} else {
+
+			}
+
 			if (changed) {
 				log("  DIFRSP: " + header + ": " + responseHeaders.get(header));
 			}
