@@ -1,10 +1,7 @@
 package proxy;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.*;
-import java.util.*;
+import java.net.Socket;
+import java.util.HashMap;
 
 public class MyProxy extends PrivacyProxy {
 
@@ -72,20 +69,26 @@ public class MyProxy extends PrivacyProxy {
 	protected byte[] onResponse(byte[] originalBytes) {
 		byte[] alteredBytes = originalBytes;
 		log("I received " + this.inOctets + " bytes");
-
+		boolean content = false;
+		boolean encoding = true;
 		for (String header : responseHeaders.keySet()) {
 			log("  RSP: " + header + ": " + responseHeaders.get(header));
 			if (header.equals("Content-Type")
 					&& responseHeaders.get("Content-Type").startsWith(
 							"text/html")) {
-				String s = new String(originalBytes);
-				s = removeSubString (s, "<script", "/script>");
-				s = removeSubString (s, "<iframe", "/iframe>");
-				s = removeSubString (s, "<div id=\"ad", "</div>");
-				alteredBytes = s.getBytes();
+				content = true;
+			} else if (header.equals("Transfer-Encoding")) {
+				 encoding = responseHeaders.get("Transfer-Encoding").equals(
+							"deflate");
 			}
 		}
-
+		if (content && encoding) {
+			String s = new String(originalBytes);
+			s = removeSubString(s, "<script", "/script>");
+			s = removeSubString(s, "<iframe", "/iframe>");
+			s = removeSubString(s, "<div id=\"ad", "</div>");
+			alteredBytes = s.getBytes();
+		}
 		// alter the original response and return it
 		return alteredBytes;
 	}
