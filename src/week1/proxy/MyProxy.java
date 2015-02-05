@@ -79,15 +79,19 @@ public class MyProxy extends PrivacyProxy {
 					&& responseHeaders.get("Content-Type").startsWith(
 							"text/html")) {
 				String s = new String(originalBytes);
+				s = s.replaceAll("<script", "<noscript");
+				s = s.replaceAll("/script>", "/noscript>");
 				try {
-					BufferedWriter bw = new BufferedWriter(new FileWriter("ding.txt"));
-					bw.write(s);
+					BufferedWriter bw = new BufferedWriter(new FileWriter(
+							"ding.txt"));
+					if (s != null) {
+						bw.write(s);
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				String s2 = s.replaceAll("request", "Kappa");
-				alteredBytes = s2.getBytes();
+				alteredBytes = s.getBytes();
 			}
 		}
 
