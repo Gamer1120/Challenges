@@ -77,16 +77,15 @@ public class MyProxy extends PrivacyProxy {
 					&& responseHeaders.get("Content-Type").startsWith(
 							"text/html")) {
 				content = true;
-			} else if (header.equals("Transfer-Encoding")) {
-				 encoding = responseHeaders.get("Transfer-Encoding").equals(
-							"deflate");
+			} else if (header.equals("Content-Encoding")) {
+				encoding = responseHeaders.get("Content-Encoding").equals(
+						"deflate");
 			}
 		}
 		if (content && encoding) {
 			String s = new String(originalBytes);
 			s = removeSubString(s, "<script", "/script>");
 			s = removeSubString(s, "<iframe", "/iframe>");
-			s = removeSubString(s, "<div id=\"ad", "</div>");
 			alteredBytes = s.getBytes();
 		}
 		// alter the original response and return it
@@ -99,13 +98,6 @@ public class MyProxy extends PrivacyProxy {
 	}
 
 	private String removeSubString(String s, String start, String end) {
-		int begin = s.indexOf(start);
-		int eind = s.indexOf(end) + end.length();
-		while (begin >= 0 && eind >= 0) {
-			s = s.substring(0, begin) + s.substring(eind, s.length() - 1);
-			begin = s.indexOf(start);
-			eind = s.indexOf(end) + end.length();
-		}
-		return s;
+		return s.replaceAll("(?s)" + start + ".*?<" + end, "");
 	}
 }
