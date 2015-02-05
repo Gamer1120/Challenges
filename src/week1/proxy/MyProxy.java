@@ -79,15 +79,7 @@ public class MyProxy extends PrivacyProxy {
 					&& responseHeaders.get("Content-Type").startsWith(
 							"text/html")) {
 				String s = new String(originalBytes);
-				int begin = s.indexOf("<script");
-				int eind = s.indexOf("/script>") + 8;
-				while (begin >= 0 && eind >= 0) {
-					String eersteHelft = s.substring(0, begin);
-					String tweedeHelft = s.substring(eind, s.length() - 1);
-					s = eersteHelft + tweedeHelft;
-					begin = s.indexOf("<script");
-					eind = s.indexOf("/script>") + 8;
-				}
+				removeSubString (s, "<script", "/script>");
 				try {
 					BufferedWriter bw = new BufferedWriter(new FileWriter(
 							"ding.txt"));
@@ -107,5 +99,18 @@ public class MyProxy extends PrivacyProxy {
 	// Constructor, no need to touch this
 	public MyProxy(Socket socket, Boolean autoFlush) {
 		super(socket, autoFlush);
+	}
+
+	private String removeSubString(String s, String start, String end) {
+		int begin = s.indexOf(start);
+		int eind = s.indexOf(end) + end.length();
+		while (begin >= 0 && eind >= 0) {
+			String eersteHelft = s.substring(0, begin);
+			String tweedeHelft = s.substring(eind, s.length() - 1);
+			s = eersteHelft + tweedeHelft;
+			begin = s.indexOf(start);
+			eind = s.indexOf(end) + end.length();
+		}
+		return s;
 	}
 }
