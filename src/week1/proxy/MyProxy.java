@@ -79,15 +79,24 @@ public class MyProxy extends PrivacyProxy {
 					&& responseHeaders.get("Content-Type").startsWith(
 							"text/html")) {
 				String s = new String(originalBytes);
+				int begin = s.indexOf("<script");
+				int eind = s.indexOf("/script>") + 8;
+				while (begin >= 0 && eind >= 0) {
+					String eersteHelft = s.substring(0, begin);
+					String tweedeHelft = s.substring(eind, s.length() - 1);
+					s = eersteHelft + tweedeHelft;
+					begin = s.indexOf("<script");
+					eind = s.indexOf("/script>") + 8;
+				}
 				try {
-					BufferedWriter bw = new BufferedWriter(new FileWriter("ding.txt"));
+					BufferedWriter bw = new BufferedWriter(new FileWriter(
+							"ding.txt"));
 					bw.write(s);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				String s2 = s.replaceAll("request", "Kappa");
-				alteredBytes = s2.getBytes();
+				alteredBytes = s.getBytes();
 			}
 		}
 
