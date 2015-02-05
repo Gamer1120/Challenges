@@ -116,7 +116,8 @@ public abstract class PrivacyProxy extends Thread {
 						urlToCall = tokens[1];
 						firstLine = line;
 						if (!method.equals("GET") && !method.equals("POST")
-								&& !method.equals("OPTIONS")) { // && !method.equals("CONNECT")) {
+								&& !method.equals("OPTIONS")
+								&& !method.equals("CONNECT")) {
 							log("Unsupported HTTP method '" + method
 									+ "', dropping request");
 							dropped = true;
