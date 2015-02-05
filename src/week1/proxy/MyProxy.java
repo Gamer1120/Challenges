@@ -15,8 +15,10 @@ public class MyProxy extends PrivacyProxy {
 	//////////////////////////////////////////////////////////////////////////
 
 	public static final String USERAGENT = "User-Agent";
-	public static final String COOKIE = "Cookie";
+	public static final String ACCEPT = "Accept";
 	public static final String REFERER = "Referer";
+	public static final String COOKIE = "Cookie";
+	
 
 	protected HashMap<String, String> onRequest(
 			HashMap<String, String> requestHeaders) {
@@ -27,11 +29,17 @@ public class MyProxy extends PrivacyProxy {
 			case USERAGENT:
 				requestHeaders.put(USERAGENT, "Mozilla/5.0");
 				break;
-			case COOKIE:
-				requestHeaders.put(COOKIE, "");
+			case ACCEPT:
+				if (requestHeaders.get(header).contains("application/javascript")) {
+					return null;
+				}
 				break;
 			case REFERER:
 				requestHeaders.put(REFERER, "");
+				break;
+			case COOKIE:
+				requestHeaders.put(COOKIE, "");
+				break;
 			}
 			log("  REQ: " + header + ": " + requestHeaders.get(header));
 		}
