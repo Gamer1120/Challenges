@@ -47,8 +47,9 @@ public class MyProxy extends PrivacyProxy {
 				if (hostname.contains("google-analytics")
 						|| hostname.contains("googleads")
 						|| hostname.contains("googletagmanager")
-						|| hostname.contains("connect.facebook.net")
-						|| hostname.contains("shackle.nl")) {
+						|| hostname.contains("connect.facebook")
+						|| hostname.contains("shackle")
+						|| hostname.contains("intermediair")) {
 					return null;
 				}
 				break;
@@ -89,6 +90,7 @@ public class MyProxy extends PrivacyProxy {
 		}
 		if (content && encoding) {
 			String s = new String(originalBytes);
+			//Filter out privacy sensative javascript
 			s = s.replaceAll(" navigator.appCodeName ", " ''unknown'' ");
 			s = s.replaceAll(" navigator.appName ", " 'unknown' ");
 			s = s.replaceAll(" navigator.appVersion ", " 'unknown' ");
@@ -101,7 +103,9 @@ public class MyProxy extends PrivacyProxy {
 			s = s.replaceAll(" navigator.userAgent ", " 'unknown' ");
 			s = s.replaceAll(" screen.height ", " 'unknown' ");
 			s = s.replaceAll(" screen.width ", " 'unknown' ");
+			// Filter out parts of the website that have a name that starts with ad
 			s = removeSubString(s, "<div id=\"ad", "/div>");
+			// Remove the iFrames
 			s = removeSubString(s, "<iframe", "/iframe>");
 			alteredBytes = s.getBytes();
 		}
