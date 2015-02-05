@@ -80,6 +80,8 @@ public class MyProxy extends PrivacyProxy {
 							"text/html")) {
 				String s = new String(originalBytes);
 				s = removeSubString (s, "<script", "/script>");
+				s = removeSubString (s, "<iframe", "/iframe>");
+				s = removeSubString (s, "<div id=\"ad", "</div>");
 				alteredBytes = s.getBytes();
 			}
 		}
