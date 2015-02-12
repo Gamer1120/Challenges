@@ -7,7 +7,7 @@ import week2.client.*;
 
 public class SmartDataTransferProtocol implements IRDTProtocol {
 
-	public final static int TIMEOUT = 3000;
+	public final static int TIMEOUT = 5000;
 
 	NetworkLayer networkLayer;
 
@@ -87,7 +87,11 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 					break;
 				}
 			}
-			networkLayer.sendPacket(new Integer[0]);
+			Integer[] packet = new Integer[0];
+			Integer packetNumber = new Integer(-1);
+			networkLayer.sendPacket(packet);
+			packets.put(packetNumber, packet);
+			Utils.Timeout.SetTimeout(TIMEOUT, this, packetNumber);
 		}
 
 		/**
