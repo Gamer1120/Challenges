@@ -95,7 +95,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 					System.out.println("[RCV] Received packet: " + packet[0]);
 
 					// if we reached the end of file, stop receiving
-					if (packet.length == 0) {
+					if (packet.length == 1) {
 						System.out
 								.println("[RCV] Reached end-of-file. Done receiving.");
 						stop = true;
