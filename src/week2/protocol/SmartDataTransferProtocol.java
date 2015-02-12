@@ -3,11 +3,13 @@ package week2.protocol;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import week2.client.*;
+import week2.client.NetworkLayer;
+import week2.client.Utils;
 
 public class SmartDataTransferProtocol implements IRDTProtocol {
 
 	public final static int TIMEOUT = 9000;
+	public final static int SIZE = 30;
 
 	NetworkLayer networkLayer;
 
@@ -70,7 +72,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				}
 				Utils.Timeout.SetTimeout(TIMEOUT, this, packetToSend[0]);
 				try {
-					Thread.sleep(300);
+					Thread.sleep(10 * SIZE);
 				} catch (InterruptedException e) {
 					break;
 				}
@@ -91,11 +93,10 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 					break;
 				}
 			}
-			Integer[] packet = new Integer[0];
-			Integer packetNumber = new Integer(-1);
+			Integer[] packet = new Integer[] { packetPointer };
 			networkLayer.sendPacket(packet);
-			packets.put(packetNumber, packet);
-			Utils.Timeout.SetTimeout(TIMEOUT, this, packetNumber);
+			packets.put(packetPointer, packet);
+			Utils.Timeout.SetTimeout(TIMEOUT, this, packetPointer);
 		}
 
 		/**
@@ -110,18 +111,17 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 			// loop until we are done receiving the file
 			boolean stop = false;
 			while (!stop) {
-
 				// try to receive a packet from the network layer
 				Integer[] packet = networkLayer.receivePacket();
 
 				// if we indeed received a packet
 				if (packet != null) {
 					// if we reached the end of file, stop receiving
-					if (packet.length == 0) {
+					if (packet.length == 1) {
 						System.out
 								.println("[RCV] Reached end-of-file. Done receiving.");
 						System.out.println("[ACK] Acknowledging final packet.");
-						networkLayer.sendPacket(new Integer[] { -1 });
+						networkLayer.sendPacket(packet);
 						stop = true;
 					}
 					// if we haven't reached the end of file yet
