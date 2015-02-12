@@ -89,29 +89,26 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				// try to receive a packet from the network layer
 				Integer[] packet = networkLayer.receivePacket();
 
-				//TODO: nummertje opslaan ack met nummer sturen bij volgende kijken of nummer + 1 is
 				// if we indeed received a packet
 				if (packet != null) {
-					System.out.println("[RCV] Received packet: " + packet[0]);
-
 					// if we reached the end of file, stop receiving
-					if (packet.length == 1) {
+					if (packet.length == 0) {
 						System.out
 								.println("[RCV] Reached end-of-file. Done receiving.");
 						stop = true;
 					}
 					// if we haven't reached the end of file yet
 					else {
+						System.out.println("[RCV] Received packet: " + packet[0]);
 						// add the packet to the map
 						packets.put(packet[0],
 								Arrays.copyOfRange(packet, 1, packet.length));
 						fileLength += packet.length - 1;
+						// send packet nummer
+						System.out.println("[ACK] Acknowledging packet: "
+								+ packet[0]);
+						networkLayer.sendPacket(new Integer[] { packet[0] });
 					}
-
-					// send packet nummer
-					System.out.println("[ACK] Acknowledging packet: "
-							+ packet[0]);
-					networkLayer.sendPacket(new Integer[] { packet[0] });
 				}
 			}
 			int filePointer = 0;
@@ -119,7 +116,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 			for (Integer i = 0; i < packets.size(); i++) {
 				Integer[] packet = packets.get(i);
 				System.arraycopy(packet, 0, fileContents, filePointer,
-						fileContents.length);
+						packet.length);
 				filePointer += packet.length;
 				System.out.println("[RCV] Wrote packet: " + i);
 			}
