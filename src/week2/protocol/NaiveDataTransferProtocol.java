@@ -6,8 +6,7 @@ public class NaiveDataTransferProtocol implements IRDTProtocol {
 
 	NetworkLayer networkLayer;
 
-	private Role role = Role.Sender;
-	//private Role role = Role.Receiver;
+	private Role role = MyRole.ROLE;
 
 	@Override
 	public void run() {
