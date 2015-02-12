@@ -87,8 +87,6 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				}
 			}
 
-			// finally, send an empty packet to signal end-of-file.
-			// There is a good chance this will not arrive, and the receiver will never finish.
 			while (!packets.isEmpty()) {
 				try {
 					Thread.sleep(10);
@@ -96,6 +94,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 					break;
 				}
 			}
+			// Send an empty package
 			Integer[] packet = new Integer[] { packetPointer };
 			networkLayer.sendPacket(packet);
 			packets.put(packetPointer, packet);
