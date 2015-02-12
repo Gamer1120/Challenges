@@ -39,6 +39,14 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 			// loop until we are done transmitting the file
 			boolean stop = false;
 			while (!stop) {
+				if (packets.size() > 30) {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						break;
+					}
+					continue;
+				}
 				// create a new packet
 				// with size packetSize
 				// or the remaining file size if less than packetSize
