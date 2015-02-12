@@ -122,7 +122,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 						// send packet nummer
 						System.out.println("[ACK] Acknowledging packet: "
 								+ packetNumber);
-						networkLayer.sendPacket(new Integer[packetNumber]);
+						networkLayer.sendPacket(new Integer[] { packetNumber });
 					} else {
 						System.out.println("[RCV] Received incorrect packet: "
 								+ packet[0]);
