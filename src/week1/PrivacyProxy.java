@@ -1,4 +1,4 @@
-package proxy;
+package week1;
 
 import java.net.*;
 import java.io.*;

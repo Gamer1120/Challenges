@@ -1,4 +1,4 @@
-package proxy;
+package week1;
 
 import java.net.Socket;
 import java.util.HashMap;
