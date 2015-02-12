@@ -1,5 +1,6 @@
 package week2.protocol;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import week2.client.*;
@@ -10,7 +11,8 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 
 	private Role role = Role.ROLE;
 
-	private HashMap<Integer, Integer[]> sentPackets = new HashMap<Integer, Integer[]>();
+	// create a map with packets with their sequencenumber as key
+	private HashMap<Integer, Integer[]> packets = new HashMap<Integer, Integer[]>();
 
 	@Override
 	public void run() {
@@ -53,8 +55,8 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				// send the packet to the network layer
 				System.out.println("[SND] Sending packet: " + packetToSend[0]);
 				networkLayer.sendPacket(packetToSend);
-				synchronized (sentPackets) {
-					sentPackets.put(packetToSend[0], packetToSend);
+				synchronized (packets) {
+					packets.put(packetToSend[0], packetToSend);
 				}
 				Utils.Timeout.SetTimeout(10, this, packetToSend[0]);
 
@@ -79,10 +81,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 		else if (this.role == Role.Receiver) {
 			System.out.println("Receiving...");
 
-			// create the array that will contain the file contents
-			Integer[] fileContents = new Integer[0];
-			int packetNumber = -1;
-
+			int fileLength = 0;
 			// loop until we are done receiving the file
 			boolean stop = false;
 			while (!stop) {
@@ -93,41 +92,36 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				//TODO: nummertje opslaan ack met nummer sturen bij volgende kijken of nummer + 1 is
 				// if we indeed received a packet
 				if (packet != null) {
-					if (packet[0] == packetNumber + 1) {
-						packetNumber++;
-						System.out.println("[RCV] Received correct packet: "
-								+ packet[0]);
+					System.out.println("[RCV] Received packet: " + packet[0]);
 
-						// if we reached the end of file, stop receiving
-						if (packet.length == 0) {
-							System.out
-									.println("[RCV] Reached end-of-file. Done receiving.");
-							stop = true;
-						}
-						// if we haven't reached the end of file yet
-						else {
-							// make a new integer array which contains fileContents
-							// + packet
-							Integer[] newFileContents = new Integer[fileContents.length
-									+ packet.length];
-							System.arraycopy(fileContents, 0, newFileContents,
-									0, fileContents.length);
-							System.arraycopy(packet, 0, newFileContents,
-									fileContents.length, packet.length);
-
-							// and assign it as the new fileContents
-							fileContents = newFileContents;
-						}
-
-						// send packet nummer
-						System.out.println("[ACK] Acknowledging packet: "
-								+ packetNumber);
-						networkLayer.sendPacket(new Integer[] { packetNumber });
-					} else {
-						System.out.println("[RCV] Received incorrect packet: "
-								+ packet[0]);
+					// if we reached the end of file, stop receiving
+					if (packet.length == 0) {
+						System.out
+								.println("[RCV] Reached end-of-file. Done receiving.");
+						stop = true;
 					}
+					// if we haven't reached the end of file yet
+					else {
+						// add the packet to the map
+						packets.put(packet[0],
+								Arrays.copyOfRange(packet, 1, packet.length));
+						fileLength += packet.length - 1;
+					}
+
+					// send packet nummer
+					System.out.println("[ACK] Acknowledging packet: "
+							+ packet[0]);
+					networkLayer.sendPacket(new Integer[] { packet[0] });
 				}
+			}
+			int filePointer = 0;
+			Integer[] fileContents = new Integer[fileLength];
+			for (Integer i = 0; i < packets.size(); i++) {
+				Integer[] packet = packets.get(i);
+				System.arraycopy(packet, 0, fileContents, filePointer,
+						fileContents.length);
+				filePointer += packet.length;
+				System.out.println("[RCV] Wrote packet: " + i);
 			}
 			// write to the output file
 			Utils.setFileContents(fileContents);
@@ -142,17 +136,17 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 	@Override
 	public void TimeoutElapsed(Object tag) {
 		System.out.println("[SND] Reached timeout for packet: " + tag);
-		synchronized (sentPackets) {
+		synchronized (packets) {
 			Integer[] receivedPacket = networkLayer.receivePacket();
 			while (receivedPacket != null) {
 				System.out.println("[SND] Removing packet: "
-						+ receivedPacket[0] + " from sentPackets.");
-				sentPackets.remove(receivedPacket[0]);
+						+ receivedPacket[0] + " from packets.");
+				packets.remove(receivedPacket[0]);
 				receivedPacket = networkLayer.receivePacket();
 			}
-			if (sentPackets.containsKey(tag)) {
+			if (packets.containsKey(tag)) {
 				System.out.println("[SND] Resending packet: " + tag);
-				networkLayer.sendPacket(sentPackets.get(tag));
+				networkLayer.sendPacket(packets.get(tag));
 			}
 		}
 	}
