@@ -7,6 +7,8 @@ import week2.client.*;
 
 public class SmartDataTransferProtocol implements IRDTProtocol {
 
+	public final static int TIMEOUT = 500;
+
 	NetworkLayer networkLayer;
 
 	private Role role = Role.ROLE;
@@ -58,7 +60,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				synchronized (packets) {
 					packets.put(packetToSend[0], packetToSend);
 				}
-				Utils.Timeout.SetTimeout(10, this, packetToSend[0]);
+				Utils.Timeout.SetTimeout(TIMEOUT, this, packetToSend[0]);
 
 				// if we reached the end of the file
 				if (filePointer >= fileContents.length) {
@@ -144,6 +146,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 			if (packets.containsKey(tag)) {
 				System.out.println("[SND] Resending packet: " + tag);
 				networkLayer.sendPacket(packets.get(tag));
+				Utils.Timeout.SetTimeout(TIMEOUT, this, tag);
 			}
 		}
 	}
