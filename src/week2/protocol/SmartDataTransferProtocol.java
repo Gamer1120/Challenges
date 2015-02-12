@@ -112,8 +112,6 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 					if (packet.length == 0) {
 						System.out
 								.println("[RCV] Reached end-of-file. Done receiving.");
-						System.out.println("[ACK] Acknowledging final packet.");
-						networkLayer.sendPacket(new Integer[] { -1 });
 						stop = true;
 					}
 					// if we haven't reached the end of file yet
