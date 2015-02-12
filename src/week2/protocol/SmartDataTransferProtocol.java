@@ -2,7 +2,7 @@ package week2.protocol;
 
 import week2.client.*;
 
-public class NaiveDataTransferProtocol implements IRDTProtocol {
+public class SmartDataTransferProtocol implements IRDTProtocol {
 
 	NetworkLayer networkLayer;
 
