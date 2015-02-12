@@ -6,6 +6,9 @@ import java.util.HashMap;
 import week2.client.NetworkLayer;
 import week2.client.Utils;
 
+/**
+ * @author Sven Konings (s1534130) en Michael Koopman (s1401335)
+ */
 public class SmartDataTransferProtocol implements IRDTProtocol {
 
 	public final static int SIZE = 30;
