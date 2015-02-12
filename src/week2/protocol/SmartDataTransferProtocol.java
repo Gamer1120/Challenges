@@ -8,8 +8,8 @@ import week2.client.Utils;
 
 public class SmartDataTransferProtocol implements IRDTProtocol {
 
-	public final static int TIMEOUT = 9000;
-	public final static int SIZE = 30;
+	public final static int SIZE = 50;
+	public final static int TIMEOUT = 10 * SIZE * SIZE;
 
 	NetworkLayer networkLayer;
 
