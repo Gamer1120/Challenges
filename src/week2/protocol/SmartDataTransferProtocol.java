@@ -7,7 +7,7 @@ import week2.client.*;
 
 public class SmartDataTransferProtocol implements IRDTProtocol {
 
-	public final static int TIMEOUT = 5000;
+	public final static int TIMEOUT = 9000;
 
 	NetworkLayer networkLayer;
 
@@ -69,7 +69,11 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 					packets.put(packetToSend[0], packetToSend);
 				}
 				Utils.Timeout.SetTimeout(TIMEOUT, this, packetToSend[0]);
-
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					break;
+				}
 				// if we reached the end of the file
 				if (filePointer >= fileContents.length) {
 					System.out
