@@ -139,6 +139,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				System.out.println("[SND] Removing packet: "
 						+ receivedPacket[0] + " from packets.");
 				packets.remove(receivedPacket[0]);
+				System.out.println("[SND] Packet: " + receivedPacket[0] + " got acknowledged.");
 				receivedPacket = networkLayer.receivePacket();
 			}
 			if (packets.containsKey(tag)) {
