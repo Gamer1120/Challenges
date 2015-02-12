@@ -110,9 +110,9 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 							// + packet
 							Integer[] newFileContents = new Integer[fileContents.length
 									+ packet.length];
-							System.arraycopy(fileContents, 0, newFileContents,
+							System.arraycopy(fileContents, 1, newFileContents,
 									0, fileContents.length);
-							System.arraycopy(packet, 0, newFileContents,
+							System.arraycopy(packet, 1, newFileContents,
 									fileContents.length, packet.length);
 
 							// and assign it as the new fileContents
