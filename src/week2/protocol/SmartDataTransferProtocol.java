@@ -41,11 +41,12 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				Integer[] packetToSend = new Integer[Math.min(packetSize,
 						fileContents.length - filePointer) + 1];
 
+				// add a packetnumber
 				packetToSend[0] = packetPointer++;
 				// read (packetToSend.length) bytes and store them in the packet
-				for (int i = 1; i <= packetSize
-						&& filePointer <= fileContents.length; i++) {
-					packetToSend[i] = fileContents[filePointer];
+				for (int i = 0; i < packetSize
+						&& filePointer < fileContents.length; i++) {
+					packetToSend[i + 1] = fileContents[filePointer];
 					filePointer++;
 				}
 
@@ -79,6 +80,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 			// create the array that will contain the file contents
 			Integer[] fileContents = new Integer[0];
 			int packetNumber = -1;
+
 			// loop until we are done receiving the file
 			boolean stop = false;
 			while (!stop) {
@@ -93,6 +95,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 						packetNumber++;
 						System.out.println("[RCV] Received correct packet: "
 								+ packet[0]);
+
 						// if we reached the end of file, stop receiving
 						if (packet.length == 0) {
 							System.out
@@ -113,6 +116,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 							// and assign it as the new fileContents
 							fileContents = newFileContents;
 						}
+
 						// send packet nummer
 						System.out.println("[ACK] Acknowledging packet: "
 								+ packetNumber);
