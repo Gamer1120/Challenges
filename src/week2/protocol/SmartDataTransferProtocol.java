@@ -108,12 +108,17 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 					}
 					// if we haven't reached the end of file yet
 					else {
-						System.out.println("[RCV] Received packet: "
-								+ packet[0]);
 						// add the packet to the map
-						packets.put(packet[0],
-								Arrays.copyOfRange(packet, 1, packet.length));
-						fileLength += packet.length - 1;
+						if (!packets.containsKey(packet[0])) {
+							packets.put(packet[0], Arrays.copyOfRange(packet,
+									1, packet.length));
+							fileLength += packet.length - 1;
+							System.out.println("[RCV] Received packet: "
+									+ packet[0]);
+						} else {
+							System.out.println("[RCV] Duplicate packet: "
+									+ packet[0]);
+						}
 						// send packet nummer
 						System.out.println("[ACK] Acknowledging packet: "
 								+ packet[0]);
