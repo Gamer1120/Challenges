@@ -7,7 +7,7 @@ import week2.client.*;
 
 public class SmartDataTransferProtocol implements IRDTProtocol {
 
-	public final static int TIMEOUT = 500;
+	public final static int TIMEOUT = 1000;
 
 	NetworkLayer networkLayer;
 
@@ -72,6 +72,13 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 
 			// finally, send an empty packet to signal end-of-file.
 			// There is a good chance this will not arrive, and the receiver will never finish.
+			while (packets.size() > 0) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					break;
+				}
+			}
 			networkLayer.sendPacket(new Integer[0]);
 		}
 
@@ -101,7 +108,8 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 					}
 					// if we haven't reached the end of file yet
 					else {
-						System.out.println("[RCV] Received packet: " + packet[0]);
+						System.out.println("[RCV] Received packet: "
+								+ packet[0]);
 						// add the packet to the map
 						packets.put(packet[0],
 								Arrays.copyOfRange(packet, 1, packet.length));
@@ -110,6 +118,12 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 						System.out.println("[ACK] Acknowledging packet: "
 								+ packet[0]);
 						networkLayer.sendPacket(new Integer[] { packet[0] });
+					}
+				} else {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						stop = true;
 					}
 				}
 			}
@@ -141,7 +155,8 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				System.out.println("[SND] Removing packet: "
 						+ receivedPacket[0] + " from packets.");
 				packets.remove(receivedPacket[0]);
-				System.out.println("[SND] Packet: " + receivedPacket[0] + " got acknowledged.");
+				System.out.println("[SND] Packet: " + receivedPacket[0]
+						+ " got acknowledged.");
 				receivedPacket = networkLayer.receivePacket();
 			}
 			if (packets.containsKey(tag)) {
