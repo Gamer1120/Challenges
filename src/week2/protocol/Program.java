@@ -20,7 +20,7 @@ public class Program {
 	private static String password = "EYIvHNN8jWXjFf6VlbsABCUaSQgTS1CXJoOZeT8VVIscuc654JMnv1g41Js53pL5u7d6HpuOqHQ2ZatUWuLB5TeIKSkCevLMe8J0";
 
 	// Change to your protocol implementation
-	private static IRDTProtocol protocolImpl = new NaiveDataTransferProtocol();
+	private static IRDTProtocol protocolImpl = new SmartDataTransferProtocol();
 
 	// Challenge server address
 	private static String serverAddress = "netsys.ewi.utwente.nl";
@@ -55,7 +55,8 @@ public class Program {
 
 			System.out.println("Done.");
 
-			System.out.println("[FRAMEWORK] Press Enter to start the simulation...");
+			System.out
+					.println("[FRAMEWORK] Press Enter to start the simulation...");
 			System.out
 					.println("[FRAMEWORK] (Simulation will also be started automatically if another client in the group issues the start command)");
 
@@ -71,13 +72,15 @@ public class Program {
 			}
 
 			System.out.println("[FRAMEWORK] Simulation started!");
-			System.out.println("[FRAMEWORK] Running protocol implementation...");
+			System.out
+					.println("[FRAMEWORK] Running protocol implementation...");
 
 			protocolImpl.setNetworkLayer(new NetworkLayer(client));
 			protocolImpl.run();
 
 		} catch (IOException e) {
-			System.out.println("[FRAMEWORK] Could not start the client, because: ");
+			System.out
+					.println("[FRAMEWORK] Could not start the client, because: ");
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			System.out.println("[FRAMEWORK] Operation interrupted.");

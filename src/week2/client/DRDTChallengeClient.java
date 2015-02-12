@@ -314,7 +314,7 @@ public class DRDTChallengeClient implements Runnable {
 							}
 						}
 					}
-					
+
 					if (!transmitted) {
 						this.sendControlMessage("NOTRANSMIT");
 					}
