@@ -1,5 +1,7 @@
 package week2.protocol;
 
+import java.util.HashMap;
+
 import week2.client.*;
 
 public class SmartDataTransferProtocol implements IRDTProtocol {
@@ -7,6 +9,8 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 	NetworkLayer networkLayer;
 
 	private Role role = Role.ROLE;
+
+	private HashMap<Integer, Integer[]> sentPackets = new HashMap<Integer, Integer[]>();
 
 	@Override
 	public void run() {
@@ -26,6 +30,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 
 			// keep track of where we are in the data
 			int filePointer = 0;
+			int packetPointer = 0;
 
 			// loop until we are done transmitting the file
 			boolean stop = false;
@@ -34,17 +39,22 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				// with size packetSize
 				// or the remaining file size if less than packetSize
 				Integer[] packetToSend = new Integer[Math.min(packetSize,
-						fileContents.length - filePointer)];
+						fileContents.length - filePointer) + 1];
 
+				packetToSend[0] = packetPointer++;
 				// read (packetToSend.length) bytes and store them in the packet
-				for (int i = 0; i < packetSize
-						&& filePointer < fileContents.length; i++) {
+				for (int i = 1; i <= packetSize
+						&& filePointer <= fileContents.length; i++) {
 					packetToSend[i] = fileContents[filePointer];
 					filePointer++;
 				}
 
 				// send the packet to the network layer
 				networkLayer.sendPacket(packetToSend);
+				synchronized (sentPackets) {
+					sentPackets.put(packetToSend[0], packetToSend);
+				}
+				Utils.Timeout.SetTimeout(10, this, packetToSend[0]);
 
 				// if we reached the end of the file
 				if (filePointer >= fileContents.length) {
@@ -100,16 +110,8 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 						// and assign it as the new fileContents
 						fileContents = newFileContents;
 					}
-				} else {
-					// wait ~10ms (or however long the OS makes us wait) before trying again
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						stop = true;
-					}
 				}
 			}
-
 			// write to the output file
 			Utils.setFileContents(fileContents);
 		}
@@ -122,6 +124,15 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 
 	@Override
 	public void TimeoutElapsed(Object tag) {
-
+		synchronized (sentPackets) {
+			Integer[] receivedPacket = networkLayer.receivePacket();
+			while (receivedPacket != null) {
+				sentPackets.remove(receivedPacket[0]);
+				receivedPacket = networkLayer.receivePacket();
+			}
+			if (sentPackets.containsKey(tag)) {
+				networkLayer.sendPacket(sentPackets.get(tag));
+			}
+		}
 	}
 }
