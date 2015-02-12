@@ -50,6 +50,7 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 				}
 
 				// send the packet to the network layer
+				System.out.println("[SND] Sending packet: " + packetToSend[0]);
 				networkLayer.sendPacket(packetToSend);
 				synchronized (sentPackets) {
 					sentPackets.put(packetToSend[0], packetToSend);
@@ -58,7 +59,8 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 
 				// if we reached the end of the file
 				if (filePointer >= fileContents.length) {
-					System.out.println("Reached end-of-file. Done sending.");
+					System.out
+							.println("[SND] Reached end-of-file. Done sending.");
 					stop = true;
 				}
 			}
@@ -135,13 +137,17 @@ public class SmartDataTransferProtocol implements IRDTProtocol {
 
 	@Override
 	public void TimeoutElapsed(Object tag) {
+		System.out.println("[SND] Reached timeout for packet: " + tag);
 		synchronized (sentPackets) {
 			Integer[] receivedPacket = networkLayer.receivePacket();
 			while (receivedPacket != null) {
+				System.out.println("[SND] Removing packet: "
+						+ receivedPacket[0] + " from sentPackets.");
 				sentPackets.remove(receivedPacket[0]);
 				receivedPacket = networkLayer.receivePacket();
 			}
 			if (sentPackets.containsKey(tag)) {
+				System.out.println("[SND] Resending packet: " + tag);
 				networkLayer.sendPacket(sentPackets.get(tag));
 			}
 		}
