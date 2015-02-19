@@ -8,7 +8,7 @@ import java.util.Random;
  * @author Jaco ter Braak, Twente University
  * @version 05-12-2013
  */
-public class SlottedKip implements IMACProtocol {
+public class SlottedTurns implements IMACProtocol {
 
 	public final static int MAX_COUNT = 4;
 
@@ -18,7 +18,7 @@ public class SlottedKip implements IMACProtocol {
 
 	private SendStatus send;
 
-	public SlottedKip() {
+	public SlottedTurns() {
 		send = SendStatus.FALSE;
 	}
 

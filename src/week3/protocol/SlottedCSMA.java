@@ -8,14 +8,14 @@ import java.util.Random;
  * @author Jaco ter Braak, Twente University
  * @version 05-12-2013
  */
-public class SlottedSven implements IMACProtocol {
+public class SlottedCSMA implements IMACProtocol {
 
-	public final static int MAX_COUNT = 4;
+	public final static int MAX_COUNT = 5;
 
 	private boolean send;
 	private int count;
 
-	public SlottedSven() {
+	public SlottedCSMA() {
 		send = false;
 		count = 0;
 	}
