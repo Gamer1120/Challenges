@@ -10,10 +10,14 @@ import java.util.Random;
  */
 public class SlottedSven implements IMACProtocol {
 
+	public final static int MAX_COUNT = 4;
+
 	private boolean send;
+	private int count;
 
 	public SlottedSven() {
 		send = false;
+		count = 0;
 	}
 
 	@Override
@@ -22,25 +26,49 @@ public class SlottedSven implements IMACProtocol {
 		// No data to send, just be quiet
 		if (localQueueLength == 0) {
 			send = false;
+			count = 0;
 			return new TransmissionInfo(TransmissionType.Silent, 0);
 		} else if (previousMediumState == MediumState.Idle) {
 			// Randomly transmit with 25% probability
 			if (new Random().nextInt(100) < 25) {
 				send = true;
+				count++;
 				return new TransmissionInfo(TransmissionType.Data, 0);
 			} else {
 				return new TransmissionInfo(TransmissionType.Silent, 0);
 			}
 		} else if (previousMediumState == MediumState.Succes) {
 			if (send) {
-				return new TransmissionInfo(TransmissionType.Data, 0);
+				count++;
+				if (count < MAX_COUNT) {
+					return new TransmissionInfo(TransmissionType.Data, 0);
+				} else if (count == MAX_COUNT) {
+					return new TransmissionInfo(TransmissionType.Data, 1);
+				} else {
+					send = false;
+					count = 0;
+					return new TransmissionInfo(TransmissionType.Silent, 0);
+				}
 			} else {
-				return new TransmissionInfo(TransmissionType.Silent, 0);
+				if (controlInformation == 1) {
+					// Randomly transmit with 33% probability
+					if (new Random().nextInt(100) < 33) {
+						send = true;
+						count++;
+						return new TransmissionInfo(TransmissionType.Data, 0);
+					} else {
+						return new TransmissionInfo(TransmissionType.Silent, 0);
+					}
+				} else {
+					return new TransmissionInfo(TransmissionType.Silent, 0);
+				}
 			}
-		} else if (previousMediumState == MediumState.Collision) {
+		} else {
+			count = 0;
 			if (send) {
 				// Randomly transmit with 50% probability
 				if (new Random().nextInt(100) < 50) {
+					count++;
 					return new TransmissionInfo(TransmissionType.Data, 0);
 				} else {
 					send = false;
@@ -49,10 +77,6 @@ public class SlottedSven implements IMACProtocol {
 			} else {
 				return new TransmissionInfo(TransmissionType.Silent, 0);
 			}
-		} else {
-			// Shouldn't happen
-			System.out.println("Error");
-			return null;
 		}
 	}
 }
