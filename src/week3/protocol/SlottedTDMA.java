@@ -16,8 +16,6 @@ public class SlottedTDMA implements IMACProtocol {
 	private int wait = -1;
 	private Status status = Status.INIT;
 	private LinkedList<Integer> receivedCI = new LinkedList<Integer>();
-	private int myNumber;
-
 	// An enum to easily determine the status of the client.
 	private enum Status {
 		INIT, TRIEDTOASSIGN, DIDNOTASSIGN, ASSIGNED
@@ -34,7 +32,6 @@ public class SlottedTDMA implements IMACProtocol {
 		case INIT:
 			if (previousMediumState == MediumState.Succes
 					&& controlInformation != 0) {
-				myNumber = controlInformation;
 				wait = CLIENT_TOTAL - 1;
 				status = Status.ASSIGNED;
 			} else if (previousMediumState == MediumState.Collision
@@ -60,7 +57,6 @@ public class SlottedTDMA implements IMACProtocol {
 			// to get a number.
 			if (previousMediumState == MediumState.Succes
 					&& controlInformation != 0) {
-				myNumber = controlInformation;
 				wait = CLIENT_TOTAL - 1;
 				status = Status.ASSIGNED;
 			} else {
