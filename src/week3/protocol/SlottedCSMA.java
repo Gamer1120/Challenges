@@ -10,14 +10,14 @@ import java.util.Random;
  */
 public class SlottedCSMA implements IMACProtocol {
 
-	public final static int MAX_COUNT = 5;
+	public final static int MAX_PACKETS = 5;
 
 	private boolean send;
-	private int count;
+	private int packetCount;
 
 	public SlottedCSMA() {
 		send = false;
-		count = 0;
+		packetCount = 0;
 	}
 
 	@Override
@@ -26,13 +26,13 @@ public class SlottedCSMA implements IMACProtocol {
 		// No data to send, just be quiet
 		if (localQueueLength == 0) {
 			send = false;
-			count = 0;
+			packetCount = 0;
 			return new TransmissionInfo(TransmissionType.Silent, 0);
 		} else if (previousMediumState == MediumState.Idle) {
 			// Randomly transmit with 25% probability
 			if (new Random().nextInt(100) < 25) {
 				send = true;
-				count++;
+				packetCount++;
 				return new TransmissionInfo(TransmissionType.Data, 0);
 			} else {
 				return new TransmissionInfo(TransmissionType.Silent, 0);
@@ -40,14 +40,14 @@ public class SlottedCSMA implements IMACProtocol {
 		} else if (previousMediumState == MediumState.Succes) {
 			// Sender keeps sending until the maximum ammount of packets has been reached
 			if (send) {
-				count++;
-				if (count < MAX_COUNT) {
+				packetCount++;
+				if (packetCount < MAX_PACKETS) {
 					return new TransmissionInfo(TransmissionType.Data, 0);
-				} else if (count == MAX_COUNT) {
+				} else if (packetCount == MAX_PACKETS) {
 					return new TransmissionInfo(TransmissionType.Data, 1);
 				} else {
 					send = false;
-					count = 0;
+					packetCount = 0;
 					return new TransmissionInfo(TransmissionType.Silent, 0);
 				}
 			} else {
@@ -56,7 +56,7 @@ public class SlottedCSMA implements IMACProtocol {
 					// Randomly transmit with 33% probability
 					if (new Random().nextInt(100) < 33) {
 						send = true;
-						count++;
+						packetCount++;
 						return new TransmissionInfo(TransmissionType.Data, 0);
 					} else {
 						return new TransmissionInfo(TransmissionType.Silent, 0);
@@ -67,11 +67,11 @@ public class SlottedCSMA implements IMACProtocol {
 				}
 			}
 		} else {
-			count = 0;
+			packetCount = 0;
 			if (send) {
 				// Randomly transmit with 50% probability
 				if (new Random().nextInt(100) < 50) {
-					count++;
+					packetCount++;
 					return new TransmissionInfo(TransmissionType.Data, 0);
 				} else {
 					send = false;

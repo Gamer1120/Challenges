@@ -10,10 +10,8 @@ import java.util.Random;
  */
 public class SlottedTurns implements IMACProtocol {
 
-	public final static int MAX_COUNT = 4;
-
 	private enum SendStatus {
-		FALSE, REQUEST, START, TRUE
+		FALSE, INTERRUPT, START, TRUE
 	}
 
 	private SendStatus send;
@@ -49,7 +47,7 @@ public class SlottedTurns implements IMACProtocol {
 						localQueueLength);
 				// Interrupt if you have a larger queue
 			} else if (localQueueLength > controlInformation) {
-				send = SendStatus.REQUEST;
+				send = SendStatus.INTERRUPT;
 				return new TransmissionInfo(TransmissionType.Data,
 						localQueueLength);
 			} else {
@@ -63,7 +61,7 @@ public class SlottedTurns implements IMACProtocol {
 				send = SendStatus.FALSE;
 				return new TransmissionInfo(TransmissionType.Silent, 0);
 				// If send interrupt, start sending
-			} else if (send == SendStatus.REQUEST) {
+			} else if (send == SendStatus.INTERRUPT) {
 				send = SendStatus.START;
 				return new TransmissionInfo(TransmissionType.Data,
 						localQueueLength);
