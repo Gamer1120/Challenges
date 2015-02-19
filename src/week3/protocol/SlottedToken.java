@@ -56,6 +56,7 @@ public class SlottedToken implements IMACProtocol {
 				// If this client doesn't have a number yet
 				// Randomly request a number with 33% probability
 				if (myNumber == -1 && new Random().nextInt(100) < 33) {
+					myNumber = 0;
 					return transmission(localQueueLength);
 				} else {
 					return new TransmissionInfo(TransmissionType.Silent, 0);
