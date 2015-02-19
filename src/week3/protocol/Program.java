@@ -21,7 +21,7 @@ public class Program implements Runnable {
 	private static String password = "gewoonkip";
 
 	// Change to your protocol implementation
-	private static IMACProtocol protocol = new SlottedAlohaSimplified();
+	private static IMACProtocol protocol = new SlottedToken();
 
 	// Challenge server address
 	private static String serverAddress = "netsys.student.utwente.nl";
