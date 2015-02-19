@@ -14,11 +14,11 @@ import week3.client.*;
 public class Program implements Runnable {
 
 	// Change to your group number (use a student number)
-	private static int groupId = 0;
+	private static int groupId = 1401335;
 
 	// Change to your group password (doesn't matter what it is,
 	// as long as everyone in the group uses the same string)
-	private static String password = "changeme";
+	private static String password = "gewoonkip";
 
 	// Change to your protocol implementation
 	private static IMACProtocol protocol = new SlottedAlohaSimplified();
