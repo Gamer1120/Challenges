@@ -4,6 +4,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
+/**
+ * A TDMA protocol implementation for the Challenge of week 3
+ * 
+ * @author Sven Konings s1534130 and Michael Koopman s1401335
+ * 
+ */
 public class SlottedTDMA implements IMACProtocol {
 	private static final int SENDCHANCE = 25;
 	private static final int CLIENT_TOTAL = 4;

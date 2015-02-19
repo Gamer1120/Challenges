@@ -3,10 +3,10 @@ package week3.protocol;
 import java.util.Random;
 
 /**
- * A fairly trivial Medium Access Control scheme.
+ * A SlottedTurns protocol implementation for the Challenge of week 3
  * 
- * @author Jaco ter Braak, Twente University
- * @version 05-12-2013
+ * @author Sven Konings s1534130 and Michael Koopman s1401335
+ * 
  */
 public class SlottedTurns implements IMACProtocol {
 
