@@ -11,7 +11,7 @@ import java.util.Random;
 public class SlottedToken implements IMACProtocol {
 
 	public final static int CLIENT_TOTAL = 4;
-	public final static int MAX_COUNT = 6;
+	public final static int MAX_COUNT = 7;
 	private int clientCount;
 	private int myNumber;
 	private int count;

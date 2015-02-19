@@ -25,7 +25,6 @@ public class SlottedTDMA implements IMACProtocol {
 		if (!receivedControlInformation.contains(controlInformation)) {
 			receivedControlInformation.add(controlInformation);
 		}
-		TransmissionInfo info = null;
 		switch (status) {
 		case INIT:
 			if (previousMediumState == MediumState.Succes
