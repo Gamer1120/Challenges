@@ -41,14 +41,18 @@ class LongestPrefixMatcher {
 	 *            The port number the IP block should route to
 	 */
 	private void addRoute(int ip, byte prefixLength, int portNumber) {
-		// TODO: Store this route
 		if (routes.containsKey(ip)) {
+			// Store dulpicate ip with different port and prefix
 			int[][] old = routes.get(ip);
 			int[][] ports = new int[old.length + 1][2];
-			System.arraycopy(old, 0, ports, 1, old.length);
+			// Add port and prefix to the array
 			ports[0] = new int[] { prefixLength, portNumber };
+			// Add the old values to the array
+			System.arraycopy(old, 0, ports, 1, old.length);
+			// Overwrite the old entry
 			routes.put(ip, ports);
 		} else {
+			// Create new entry
 			routes.put(ip, new int[][] { { prefixLength, portNumber } });
 		}
 	}
@@ -61,23 +65,29 @@ class LongestPrefixMatcher {
 	 * @return The port number this IP maps to
 	 */
 	private int lookup(int ip) {
-		// TODO: Look up this route
 		int port = -1;
 		int i = 1;
-		loop: while (i < 32) {
+		// While the index is smaller than the amount of bits of the ip
+		while (i < 32) {
+			// Try to find the ip
 			if (routes.containsKey(ip)) {
 				int[][] ipRoutes = routes.get(ip);
 				int prefix = -1;
+				// Look at all the ports and prefix lengths of this ip
 				for (int[] route : ipRoutes) {
+					// If the prefix length is correct
 					if (i - 1 <= 32 - route[0] && route[0] > prefix) {
+						// Save the port
 						prefix = route[0];
 						port = route[1];
 					}
 				}
+				// Stop searching
 				if (port != -1) {
-					break loop;
+					break;
 				}
 			}
+			// Set all bits on the right side before i to zero
 			ip = ip >>> i;
 			ip = ip << i++;
 		}
