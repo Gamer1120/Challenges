@@ -1,7 +1,9 @@
 package week4;
 
-import java.io.*;
-import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
 
 class LongestPrefixMatcher {
 	// TODO: Request access token with your student assistant
@@ -9,7 +11,7 @@ class LongestPrefixMatcher {
 
 	public static final String ROUTES_FILE = "routes.txt";
 	public static final String LOOKUP_FILE = "lookup.txt";
-	private HashMap<Integer, Integer> routes;
+	private HashSet<Integer[]> routes;
 
 	/**
 	 * Main entry point
@@ -23,7 +25,7 @@ class LongestPrefixMatcher {
 	 * Constructs a new LongestPrefixMatcher and starts routing
 	 */
 	public LongestPrefixMatcher() {
-		this.routes = new HashMap<Integer, Integer>();
+		this.routes = new HashSet<Integer[]>();
 		this.readRoutes();
 		this.readLookup();
 	}
@@ -41,10 +43,8 @@ class LongestPrefixMatcher {
 	 */
 	private void addRoute(int ip, byte prefixLength, int portNumber) {
 		// TODO: Store this route
-		System.out.println(Integer.toBinaryString(ip));
-		ip = ip >> 32 - prefixLength;
-		System.out.println(Integer.toBinaryString(ip));
-		routes.put(ip, portNumber);
+		routes.add(new Integer[] { ip, Byte.toUnsignedInt(prefixLength),
+				portNumber });
 	}
 
 	/**
@@ -57,12 +57,9 @@ class LongestPrefixMatcher {
 	private int lookup(int ip) {
 		// TODO: Look up this route
 		int port = -1;
-		while (ip != 0) {
-			if (routes.containsKey(ip)) {
-				port = routes.get(ip);
-				break;
-			} else {
-				ip = ip >> 1;
+		for (Integer[] route : routes) {
+			if (Integer.numberOfLeadingZeros(route[0] ^ ip) >= route[1]) {
+				port = route[2];
 			}
 		}
 		return port;
