@@ -57,11 +57,12 @@ class LongestPrefixMatcher {
 		int i = 1;
 		while (i < 32) {
 			if (routes.containsKey(ip)) {
+				System.out.println(i + ": " + ipToHuman(ip));
 				Integer[] ipRoute = routes.get(ip);
 				if (i - 1 <= 32 - ipRoute[0]) {
 					port = ipRoute[1];
+					break;
 				}
-				break;
 			}
 			ip = ip >>> i;
 			ip = ip << i++;
