@@ -4,7 +4,7 @@ import java.io.*;
 
 class LongestPrefixMatcher {
 	// TODO: Request access token with your student assistant
-	public static final String ACCESS_TOKEN = "s1234567_abcde";
+	public static final String ACCESS_TOKEN = "s1401335_p37r8";
 	
 	public static final String ROUTES_FILE  = "routes.txt";
 	public static final String LOOKUP_FILE  = "lookup.txt";
