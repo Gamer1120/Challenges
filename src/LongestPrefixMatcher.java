@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 class LongestPrefixMatcher {
 	// TODO: Request access token with your student assistant
@@ -9,7 +10,7 @@ class LongestPrefixMatcher {
 
 	public static final String ROUTES_FILE = "routes.txt";
 	public static final String LOOKUP_FILE = "lookup.txt";
-	private HashMap<Integer, Integer[]> routes;
+	private HashMap<Integer, TreeSet<Route>> routes;
 
 	/**
 	 * Main entry point
@@ -23,7 +24,7 @@ class LongestPrefixMatcher {
 	 * Constructs a new LongestPrefixMatcher and starts routing
 	 */
 	public LongestPrefixMatcher() {
-		this.routes = new HashMap<Integer, Integer[]>();
+		this.routes = new HashMap<Integer, TreeSet<Route>>();
 		this.readRoutes();
 		this.readLookup();
 	}
@@ -41,7 +42,13 @@ class LongestPrefixMatcher {
 	 */
 	private void addRoute(int ip, byte prefixLength, int portNumber) {
 		// TODO: Store this route
-		routes.put(ip, new Integer[] { (int) prefixLength, portNumber });
+		if (routes.containsKey(ip)) {
+			routes.get(ip).add(new Route(prefixLength, portNumber));
+		} else {
+			TreeSet<Route> ports = new TreeSet<Route>();
+			ports.add(new Route(prefixLength, portNumber));
+			routes.put(ip, ports);
+		}
 	}
 
 	/**
@@ -57,11 +64,13 @@ class LongestPrefixMatcher {
 		int i = 1;
 		while (i < 32) {
 			if (routes.containsKey(ip)) {
-				System.out.println(i + ": " + ipToHuman(ip));
-				Integer[] ipRoute = routes.get(ip);
-				if (i - 1 <= 32 - ipRoute[0]) {
-					port = ipRoute[1];
-					break;
+				//System.out.println(i + ": " + ipToHuman(ip));
+				TreeSet<Route> ipRoutes = routes.get(ip);
+				for (Route route : ipRoutes) {
+					if (i - 1 <= 32 - route.getPrefixLength()) {
+						port = route.getPort();
+						break;
+					}
 				}
 			}
 			ip = ip >>> i;
@@ -174,5 +183,35 @@ class LongestPrefixMatcher {
 		}
 
 		return ip;
+	}
+
+	public class Route implements Comparable<Route> {
+
+		private byte prefixLength;
+		private int portNumber;
+
+		public Route(byte prefixLength, int portNumber) {
+			this.prefixLength = prefixLength;
+			this.portNumber = portNumber;
+		}
+
+		public byte getPrefixLength() {
+			return prefixLength;
+		}
+
+		public int getPort() {
+			return portNumber;
+		}
+
+		@Override
+		public int compareTo(Route route) {
+			if (this.getPrefixLength() > route.getPrefixLength()) {
+				return -1;
+			} else if (this.getPrefixLength() < route.getPrefixLength()) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
 	}
 }
