@@ -1,13 +1,16 @@
 package week4;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 class LongestPrefixMatcher {
 	// TODO: Request access token with your student assistant
-	public static final String ACCESS_TOKEN = "s1401335_p37r8";
-	
-	public static final String ROUTES_FILE  = "routes.txt";
-	public static final String LOOKUP_FILE  = "lookup.txt";
+	public static final String ACCESS_TOKEN = "s1234567_abcde";
+
+	public static final String ROUTES_FILE = "routes.txt";
+	public static final String LOOKUP_FILE = "lookup.txt";
+	private LinkedList<Route> routes;
 
 	/**
 	 * Main entry point
@@ -21,41 +24,55 @@ class LongestPrefixMatcher {
 	 * Constructs a new LongestPrefixMatcher and starts routing
 	 */
 	public LongestPrefixMatcher() {
+		this.routes = new LinkedList<Route>();
 		this.readRoutes();
 		this.readLookup();
 	}
 
 	/**
 	 * Adds a route to the routing tables
-	 * @param ip The IP the block starts at in integer representation
-	 * @param prefixLength The amount of fixed binary digits in the 
-	 *                    block (notation ip/prefixLength)
-	 * @param portNumber The port number the IP block should route to
+	 * 
+	 * @param ip
+	 *            The IP the block starts at in integer representation
+	 * @param prefixLength
+	 *            The amount of fixed binary digits in the block (notation
+	 *            ip/prefixLength)
+	 * @param portNumber
+	 *            The port number the IP block should route to
 	 */
-	private void addRoute(int ip, byte prefixLength, int portNumber) { 
-		// TODO: Store this route
+	private void addRoute(int ip, byte prefixLength, int portNumber) {
+		routes.add(new Route(ip, prefixLength, portNumber));
 	}
 
 	/**
 	 * Looks up an IP address in the routing tables
-	 * @param ip The IP address to be looked up in integer representation
+	 * 
+	 * @param ip
+	 *            The IP address to be looked up in integer representation
 	 * @return The port number this IP maps to
 	 */
 	private int lookup(int ip) {
-		// TODO: Look up this route
-		return -1;
+		int port = -1;
+		for (Route route : routes) {
+			if (Integer.numberOfLeadingZeros(route.getIP() ^ ip) >= route.getPrefixLength()) {
+				port = route.getPort();
+			}
+		}
+		return port;
 	}
 
 	/**
 	 * Converts an integer representation IP to the human readable form
-	 * @param ip The IP address to convert
+	 * 
+	 * @param ip
+	 *            The IP address to convert
 	 * @return The String representation for the IP (as xxx.xxx.xxx.xxx)
 	 */
 	private String ipToHuman(int ip) {
-		return Integer.toString(ip >> 24 & 0xff) + "." +
-			   Integer.toString(ip >> 16 & 0xff) + "." +
-			   Integer.toString(ip >> 8 & 0xff) + "." +
-			   Integer.toString(ip & 0xff);
+		return Integer.toString(ip >> 24 & 0xff) + "."
+				+ Integer.toString(ip >> 16 & 0xff) + "."
+				+ Integer.toString(ip >> 8 & 0xff) + "."
+				+ Integer.toString(ip & 0xff);
 	}
 
 	/**
@@ -73,8 +90,10 @@ class LongestPrefixMatcher {
 			System.err.println("Could not open " + ROUTES_FILE);
 		} finally {
 			if (br != null) {
-				try { br.close(); }
-				catch (IOException e) { }
+				try {
+					br.close();
+				} catch (IOException e) {
+				}
 			}
 		}
 	}
@@ -93,7 +112,7 @@ class LongestPrefixMatcher {
 
 		addRoute(ip, prefixLength, portNumber);
 	}
-	
+
 	/**
 	 * Reads IPs to look up from lookup.bin and passes them to this.lookup
 	 */
@@ -106,7 +125,8 @@ class LongestPrefixMatcher {
 
 			String line;
 			while ((line = br.readLine()) != null) {
-				sb.append(Integer.toString(this.lookup(this.parseIP(line))) + "\n");
+				sb.append(Integer.toString(this.lookup(this.parseIP(line)))
+						+ "\n");
 				count++;
 
 				if (count >= 1024) {
@@ -121,25 +141,54 @@ class LongestPrefixMatcher {
 			System.err.println("Could not open " + LOOKUP_FILE);
 		} finally {
 			if (br != null) {
-				try { br.close(); }
-				catch (IOException e) { }
+				try {
+					br.close();
+				} catch (IOException e) {
+				}
 			}
 		}
 	}
 
 	/**
 	 * Parses an IP
-	 * @param ip The IP address to convert
+	 * 
+	 * @param ip
+	 *            The IP address to convert
 	 * @return The integer representation for the IP
 	 */
 	private int parseIP(String ipString) {
 		String[] ipParts = ipString.split("\\.");
-		
+
 		int ip = 0;
 		for (int i = 0; i < 4; i++) {
 			ip |= Integer.parseInt(ipParts[i]) << (24 - (8 * i));
 		}
 
 		return ip;
+	}
+
+	public class Route {
+
+		private int ip;
+		private byte prefixLength;
+		private int portNumber;
+
+		public Route(int ip, byte prefixLength, int portNumber) {
+			this.ip = ip;
+			this.prefixLength = prefixLength;
+			this.portNumber = portNumber;
+		}
+
+		public int getIP() {
+			return ip;
+		}
+
+		public byte getPrefixLength() {
+			return prefixLength;
+		}
+
+		public int getPort() {
+			return portNumber;
+		}
 	}
 }
