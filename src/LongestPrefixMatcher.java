@@ -62,14 +62,15 @@ class LongestPrefixMatcher {
 		// TODO: Look up this route
 		int port = -1;
 		int i = 1;
-		while (i < 32) {
+		loop: while (i < 32) {
 			if (routes.containsKey(ip)) {
 				//System.out.println(i + ": " + ipToHuman(ip));
 				TreeSet<Route> ipRoutes = routes.get(ip);
 				for (Route route : ipRoutes) {
+					//System.out.println(route.getPrefixLength() + ": " + route.getPort());
 					if (i - 1 <= 32 - route.getPrefixLength()) {
 						port = route.getPort();
-						break;
+						break loop;
 					}
 				}
 			}
