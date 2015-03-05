@@ -42,8 +42,7 @@ class LongestPrefixMatcher {
 	private void addRoute(int ip, byte prefixLength, int portNumber) {
 		// TODO: Store this route
 		//System.out.println(ip + ": " + ipToHuman(ip));
-		routes.add(new Integer[] { ip, (int) prefixLength,
-				portNumber });
+		routes.add(new Integer[] { ip, (int) prefixLength, portNumber });
 	}
 
 	/**
@@ -55,13 +54,15 @@ class LongestPrefixMatcher {
 	 */
 	private int lookup(int ip) {
 		// TODO: Look up this route
-		int port = -1;
+		int[] port = new int[] { -1, -1 };
 		for (Integer[] route : routes) {
-			if (Integer.numberOfLeadingZeros(route[0] ^ ip) >= route[1]) {
-				port = route[2];
+			if (Integer.numberOfLeadingZeros(route[0] ^ ip) >= route[1]
+					&& route[1] > port[1]) {
+				port[0] = route[2];
+				port[1] = route[1];
 			}
 		}
-		return port;
+		return port[0];
 	}
 
 	/**
