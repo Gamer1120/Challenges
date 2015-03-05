@@ -66,15 +66,16 @@ class LongestPrefixMatcher {
 		int i = 1;
 		loop: while (i < 32) {
 			if (routes.containsKey(ip)) {
-				//System.out.println(i + ": " + ipToHuman(ip));
 				int[][] ipRoutes = routes.get(ip);
 				int prefix = -1;
 				for (int[] route : ipRoutes) {
 					if (i - 1 <= 32 - route[0] && route[0] > prefix) {
 						prefix = route[0];
 						port = route[1];
-						break loop;
 					}
+				}
+				if (port != -1) {
+					break loop;
 				}
 			}
 			ip = ip >>> i;
