@@ -16,11 +16,9 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 	@Override
 	public void init(LinkLayer linkLayer) {
 		this.linkLayer = linkLayer;
-
-		// First, send a broadcast packet (to address 0), with no data
-		Packet discoveryBroadcastPacket = new Packet(
-				this.linkLayer.getOwnAddress(), 0, new DataTable(0));
-		this.linkLayer.transmit(discoveryBroadcastPacket);
+		int address = this.linkLayer.getOwnAddress();
+		this.forwardingTable.put(address, new BasicRoute(address, 0));
+		this.linkLayer.transmit(generatePacket());
 	}
 
 	@Override
@@ -32,45 +30,44 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 				if (packet != null) {
 					int address = packet.getSourceAddress();
 					int cost = linkLayer.getLinkCost(address);
-					if (packet.getData().getNColumns() == 0) {
-
-						forwardingTable.put(address, new BasicRoute(address,
-								cost));
-					} else {
-						DataTable packetTable = packet.getData();
-						for (int i = 0; i < packetTable.getNRows(); i++) {
-							Integer[] currRow = packetTable.getRow(i);
-							int destination = currRow[0];
-							int totalCost = cost + currRow[1];
-							//int nextHop = currRow[2];
-							if (forwardingTable.containsKey(destination)) {
-								if (forwardingTable.get(destination).getCost() > (totalCost)) {
-									forwardingTable.put(destination,
-											new BasicRoute(address, totalCost));
-								}
-							} else {
+					DataTable packetTable = packet.getData();
+					boolean changed = false;
+					for (int i = 0; i < packetTable.getNRows(); i++) {
+						Integer[] currRow = packetTable.getRow(i);
+						int destination = currRow[0];
+						int totalCost = cost + currRow[1];
+						//int nextHop = currRow[2];
+						if (forwardingTable.containsKey(destination)) {
+							if (forwardingTable.get(destination).getCost() > (totalCost)) {
+								changed = true;
 								forwardingTable.put(destination,
 										new BasicRoute(address, totalCost));
 							}
+						} else {
+							changed = true;
+							forwardingTable.put(destination, new BasicRoute(
+									address, totalCost));
 						}
 					}
-					DataTable table = new DataTable(3);
-					for (Entry<Integer, BasicRoute> entry : forwardingTable
-							.entrySet()) {
-						BasicRoute route = entry.getValue();
-						table.addRow(new Integer[] { entry.getKey(),
-								route.getCost(), route.nextHop });
+					if (changed) {
+						this.linkLayer.transmit(generatePacket());
 					}
-					Packet broadcastPacket = new Packet(
-							this.linkLayer.getOwnAddress(), 0, table);
-					this.linkLayer.transmit(broadcastPacket);
 				}
-
 				Thread.sleep(10);
 			}
 		} catch (InterruptedException e) {
 			// We were interrupted, stop execution of the protocol
 		}
+	}
+
+	private Packet generatePacket() {
+		DataTable table = new DataTable(3);
+		for (Entry<Integer, BasicRoute> entry : forwardingTable.entrySet()) {
+			BasicRoute route = entry.getValue();
+			table.addRow(new Integer[] { entry.getKey(), route.getCost(),
+					route.nextHop });
+		}
+		return new Packet(this.linkLayer.getOwnAddress(), 0, table);
 	}
 
 	@Override
