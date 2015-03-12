@@ -11,9 +11,10 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 	@Override
 	public void init(LinkLayer linkLayer) {
 		this.linkLayer = linkLayer;
-		
+
 		// First, send a broadcast packet (to address 0), with no data
-		Packet discoveryBroadcastPacket = new Packet(this.linkLayer.getOwnAddress(), 0, new DataTable(0));
+		Packet discoveryBroadcastPacket = new Packet(
+				this.linkLayer.getOwnAddress(), 0, new DataTable(0));
 		this.linkLayer.transmit(discoveryBroadcastPacket);
 	}
 
@@ -22,11 +23,13 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 		try {
 			while (true) {
 				// Try to receive a packet
-				Packet packet = this.linkLayer.receive();
+				Packet packet = linkLayer.receive();
 				if (packet != null) {
+					forwardingTable.put(packet.getSourceAddress(),
+							new BasicRoute(packet.getSourceAddress()));
 					// Do something with the packet
 				}
-				
+
 				Thread.sleep(10);
 			}
 		} catch (InterruptedException e) {
