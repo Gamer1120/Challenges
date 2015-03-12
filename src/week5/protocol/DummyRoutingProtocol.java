@@ -2,7 +2,6 @@ package week5.protocol;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -88,9 +87,9 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			if (links.containsKey(node)) {
 				if (!(links.get(node) == cost)) {
 					changed = true;
-					if (cost == -1) {
+					if (links.get(node) == -1 || cost == -1) {
 						toRemove.add(node);
-					} else if (links.get(node) != -1) {
+					} else {
 						int difference = cost - links.get(node);
 						for (BasicRoute route : forwardingTable.values()) {
 							if (route.nextHop == node) {
