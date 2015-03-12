@@ -1,8 +1,12 @@
 package week3.client;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.ProtocolException;
+import java.net.Socket;
+import java.util.Scanner;
 
 import week3.protocol.IMACProtocol;
 import week3.protocol.MediumState;
@@ -205,6 +209,7 @@ public class MACChallengeClient implements Runnable {
 	/**
 	 * Handles communication between the server and the protocol implementation
 	 */
+	@Override
 	public void run() {
 		boolean stopThread = false;
 		while (!stopThread && !simulationFinished) {

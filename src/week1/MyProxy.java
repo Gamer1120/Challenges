@@ -23,6 +23,7 @@ public class MyProxy extends PrivacyProxy {
 	 * @param requestHeaders
 	 *            The headers to be changed.
 	 */
+	@Override
 	protected HashMap<String, String> onRequest(
 			HashMap<String, String> requestHeaders) {
 		for (String header : requestHeaders.keySet()) {
@@ -73,6 +74,7 @@ public class MyProxy extends PrivacyProxy {
 	 * @param originalBytes
 	 *            The bytes received from the server.
 	 */
+	@Override
 	protected byte[] onResponse(byte[] originalBytes) {
 		byte[] alteredBytes = originalBytes;
 		log("I received " + this.inOctets + " bytes");

@@ -1,8 +1,10 @@
 package week3.protocol;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-import week3.client.*;
+import week3.client.MACChallengeClient;
 
 /**
  * Entry point of the program. Starts the client and links the used MAC

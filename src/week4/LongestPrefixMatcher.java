@@ -1,16 +1,17 @@
 package week4;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 class LongestPrefixMatcher {
 	// TODO: Request access token with your student assistant
-	public static final String ACCESS_TOKEN = "s1234567_abcde";
+	public static final String ACCESS_TOKEN = "s1401335_p37r8";
 
 	public static final String ROUTES_FILE = "routes.txt";
 	public static final String LOOKUP_FILE = "lookup.txt";
-	private LinkedList<Route> routes;
+	private HashMap<Integer, int[][]> routes;
 
 	/**
 	 * Main entry point
@@ -24,7 +25,7 @@ class LongestPrefixMatcher {
 	 * Constructs a new LongestPrefixMatcher and starts routing
 	 */
 	public LongestPrefixMatcher() {
-		this.routes = new LinkedList<Route>();
+		this.routes = new HashMap<Integer, int[][]>();
 		this.readRoutes();
 		this.readLookup();
 	}
@@ -41,7 +42,20 @@ class LongestPrefixMatcher {
 	 *            The port number the IP block should route to
 	 */
 	private void addRoute(int ip, byte prefixLength, int portNumber) {
-		routes.add(new Route(ip, prefixLength, portNumber));
+		if (routes.containsKey(ip)) {
+			// Store dulpicate ip with different port and prefix
+			int[][] old = routes.get(ip);
+			int[][] ports = new int[old.length + 1][2];
+			// Add port and prefix to the array
+			ports[0] = new int[] { prefixLength, portNumber };
+			// Add the old values to the array
+			System.arraycopy(old, 0, ports, 1, old.length);
+			// Overwrite the old entry
+			routes.put(ip, ports);
+		} else {
+			// Create new entry
+			routes.put(ip, new int[][] { { prefixLength, portNumber } });
+		}
 	}
 
 	/**
@@ -53,10 +67,30 @@ class LongestPrefixMatcher {
 	 */
 	private int lookup(int ip) {
 		int port = -1;
-		for (Route route : routes) {
-			if (Integer.numberOfLeadingZeros(route.getIP() ^ ip) >= route.getPrefixLength()) {
-				port = route.getPort();
+		int i = 1;
+		// While the index is smaller than the amount of bits of the ip
+		while (i < 32) {
+			// Try to find the ip
+			if (routes.containsKey(ip)) {
+				int[][] ipRoutes = routes.get(ip);
+				int prefix = -1;
+				// Look at all the ports and prefix lengths of this ip
+				for (int[] route : ipRoutes) {
+					// If the prefix length is correct
+					if (i - 1 <= 32 - route[0] && route[0] > prefix) {
+						// Save the port
+						prefix = route[0];
+						port = route[1];
+					}
+				}
+				// Stop searching
+				if (port != -1) {
+					break;
+				}
 			}
+			// Set all bits on the right side before i to zero
+			ip = ip >>> i;
+			ip = ip << i++;
 		}
 		return port;
 	}
@@ -165,30 +199,5 @@ class LongestPrefixMatcher {
 		}
 
 		return ip;
-	}
-
-	public class Route {
-
-		private int ip;
-		private byte prefixLength;
-		private int portNumber;
-
-		public Route(int ip, byte prefixLength, int portNumber) {
-			this.ip = ip;
-			this.prefixLength = prefixLength;
-			this.portNumber = portNumber;
-		}
-
-		public int getIP() {
-			return ip;
-		}
-
-		public byte getPrefixLength() {
-			return prefixLength;
-		}
-
-		public int getPort() {
-			return portNumber;
-		}
 	}
 }

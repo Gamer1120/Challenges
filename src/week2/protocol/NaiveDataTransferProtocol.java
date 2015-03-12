@@ -1,6 +1,7 @@
 package week2.protocol;
 
-import week2.client.*;
+import week2.client.NetworkLayer;
+import week2.client.Utils;
 
 public class NaiveDataTransferProtocol implements IRDTProtocol {
 

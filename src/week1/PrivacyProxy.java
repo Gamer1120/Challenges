@@ -1,9 +1,14 @@
 package week1;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.lang.System;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public abstract class PrivacyProxy extends Thread {
 	private Socket socket = null;
@@ -71,6 +76,7 @@ public abstract class PrivacyProxy extends Thread {
 	//
 	//////////////////////////////////////////////////////////////////////////
 
+	@Override
 	public void run() {
 
 		this.threadId = Thread.currentThread().getId();
