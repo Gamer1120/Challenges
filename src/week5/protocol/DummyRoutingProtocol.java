@@ -29,12 +29,12 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 	public void run() {
 		try {
 			while (true) {
+				updateTable();
 				// Try to receive a packet
 				Packet packet = linkLayer.receive();
 				if (packet != null) {
 					receive(packet);
 				}
-				updateTable();
 				Thread.sleep(10);
 			}
 		} catch (InterruptedException e) {
@@ -55,6 +55,12 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 
 	private void receive(Packet packet) {
 		int address = packet.getSourceAddress();
+		HashSet<Integer> connectedNodes = new HashSet<Integer>();
+		for (Entry<Integer, BasicRoute> entry : forwardingTable.entrySet()) {
+			if (entry.getValue().nextHop == address) {
+				connectedNodes.add(entry.getKey());
+			}
+		}
 		int cost = linkLayer.getLinkCost(address);
 		DataTable packetTable = packet.getData();
 		boolean changed = false;
@@ -63,6 +69,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			int destination = currRow[0];
 			int totalCost = cost + currRow[1];
 			//int nextHop = currRow[2];
+			connectedNodes.remove(destination);
 			if (forwardingTable.containsKey(destination)) {
 				if (forwardingTable.get(destination).getCost() > (totalCost)) {
 					changed = true;
@@ -74,6 +81,10 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 				forwardingTable.put(destination, new BasicRoute(address,
 						totalCost));
 			}
+		}
+		for (int node : connectedNodes) {
+			changed = true;
+			forwardingTable.remove(node);
 		}
 		if (changed) {
 			System.out.println(forwardingTable);
