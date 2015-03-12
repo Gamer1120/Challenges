@@ -57,6 +57,24 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 				destination, table));
 	}
 
+	private void sendPoisonPacket() {
+		for (Entry<Integer, Integer> neighbour : links.entrySet()) {
+			DataTable table = new DataTable(3);
+			for (Entry<Integer, BasicRoute> entry : forwardingTable.entrySet()) {
+				BasicRoute route = entry.getValue();
+				if (!(neighbour.getKey() == route.nextHop)) {
+					table.addRow(new Integer[] { entry.getKey(),
+							route.getCost(), route.nextHop });
+				}
+			}
+			linkLayer.transmit(new Packet(this.linkLayer.getOwnAddress(),
+					neighbour.getKey(), table));
+		}
+		//if (entry.getValue() != -1 && ignored != entry.getKey()) {
+		//	sendPacket(entry.getKey());
+		//}
+	}
+
 	private void receive(Packet packet) {
 		int address = packet.getSourceAddress();
 		HashSet<Integer> connectedNodes = new HashSet<Integer>();
@@ -65,6 +83,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 				connectedNodes.add(entry.getKey());
 			}
 		}
+
 		int cost = linkLayer.getLinkCost(address);
 		DataTable packetTable = packet.getData();
 		boolean changed = false;
@@ -93,6 +112,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 		if (changed) {
 			System.out.println(forwardingTable);
 			sendPacket();
+			//TODO: Send this only to non-ignored neighbours.
 		}
 	}
 
