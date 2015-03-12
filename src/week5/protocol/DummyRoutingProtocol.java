@@ -47,6 +47,8 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 	}
 
 	private void sendPacket(int destination) {
+		System.out.println("TO " + destination);
+		System.out.println(forwardingTable);
 		DataTable table = new DataTable(3);
 		for (Entry<Integer, BasicRoute> entry : forwardingTable.entrySet()) {
 			BasicRoute route = entry.getValue();
@@ -59,31 +61,37 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 
 	private void receive(Packet packet) {
 		int address = packet.getSourceAddress();
+		int cost = linkLayer.getLinkCost(address);
+		DataTable packetTable = packet.getData();
 		HashSet<Integer> connectedNodes = new HashSet<Integer>();
 		for (Entry<Integer, BasicRoute> entry : forwardingTable.entrySet()) {
 			if (entry.getValue().nextHop == address) {
 				connectedNodes.add(entry.getKey());
 			}
 		}
-		int cost = linkLayer.getLinkCost(address);
-		DataTable packetTable = packet.getData();
+		int count = 0;
+		boolean send = false;
 		boolean changed = false;
 		for (int i = 0; i < packetTable.getNRows(); i++) {
 			Integer[] currRow = packetTable.getRow(i);
 			int destination = currRow[0];
-			int totalCost = cost + currRow[1];
+			int nodeCost = currRow[1];
 			//int nextHop = currRow[2];
 			connectedNodes.remove(destination);
 			if (forwardingTable.containsKey(destination)) {
-				if (forwardingTable.get(destination).getCost() > (totalCost)) {
+				count++;
+				int ownCost = forwardingTable.get(destination).getCost();
+				if (ownCost > cost + nodeCost) {
 					changed = true;
 					forwardingTable.put(destination, new BasicRoute(address,
-							totalCost));
+							cost + nodeCost));
+				} else if (cost + ownCost < nodeCost) {
+					send = true;
 				}
 			} else {
 				changed = true;
-				forwardingTable.put(destination, new BasicRoute(address,
-						totalCost));
+				forwardingTable.put(destination, new BasicRoute(address, cost
+						+ nodeCost));
 			}
 		}
 		for (int node : connectedNodes) {
@@ -91,8 +99,9 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			forwardingTable.remove(node);
 		}
 		if (changed) {
-			System.out.println(forwardingTable);
 			sendPacket();
+		} else if (send || forwardingTable.size() > count) {
+			sendPacket(address);
 		}
 	}
 
@@ -132,7 +141,6 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			}
 		}
 		if (changed) {
-			System.out.println(forwardingTable);
 			sendPacket();
 		}
 	}
