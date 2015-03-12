@@ -17,4 +17,8 @@ public class BasicRoute extends AbstractRoute {
 	public int getCost() {
 		return cost;
 	}
+
+	public String toString() {
+		return nextHop + ":" + cost;
+	}
 }
