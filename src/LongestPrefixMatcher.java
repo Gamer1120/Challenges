@@ -1,8 +1,11 @@
+/**
+ * @author Sven Konings s1534130 en Michael Koopman s1401335
+ */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 
 class LongestPrefixMatcher {
 	// TODO: Request access token with your student assistant
