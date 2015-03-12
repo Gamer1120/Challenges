@@ -63,13 +63,14 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 		int address = packet.getSourceAddress();
 		int cost = linkLayer.getLinkCost(address);
 		DataTable packetTable = packet.getData();
-		HashSet<Integer> connectedNodes = new HashSet<Integer>();
+		HashSet<Integer> packetNodes = new HashSet<Integer>();
 		for (Entry<Integer, BasicRoute> entry : forwardingTable.entrySet()) {
 			if (entry.getValue().nextHop == address) {
-				connectedNodes.add(entry.getKey());
+				packetNodes.add(entry.getKey());
 			}
 		}
-		int count = 0;
+		HashSet<Integer> ownNodes = new HashSet<Integer>(
+				forwardingTable.keySet());
 		boolean send = false;
 		boolean changed = false;
 		for (int i = 0; i < packetTable.getNRows(); i++) {
@@ -77,9 +78,9 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			int destination = currRow[0];
 			int nodeCost = currRow[1];
 			//int nextHop = currRow[2];
-			connectedNodes.remove(destination);
+			packetNodes.remove(destination);
 			if (forwardingTable.containsKey(destination)) {
-				count++;
+				ownNodes.remove(destination);
 				int ownCost = forwardingTable.get(destination).getCost();
 				if (ownCost > cost + nodeCost) {
 					changed = true;
@@ -94,7 +95,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 						+ nodeCost));
 			}
 		}
-		for (int node : connectedNodes) {
+		for (int node : packetNodes) {
 			changed = true;
 			forwardingTable.remove(node);
 		}
@@ -104,7 +105,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 					sendPacket(neighbour.getKey());
 				}
 			}
-		} else if (send || forwardingTable.size() > count) {
+		} else if (send || !ownNodes.isEmpty()) {
 			sendPacket(address);
 		}
 	}
@@ -117,8 +118,10 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			if (links.containsKey(node)) {
 				if (!(links.get(node) == cost)) {
 					changed = true;
-					if (links.get(node) == -1 || cost == -1) {
+					if (cost == -1) {
 						toRemove.add(node);
+					} else if (links.get(node) == -1) {
+						sendPacket(node);
 					} else {
 						int difference = cost - links.get(node);
 						for (BasicRoute route : forwardingTable.values()) {
