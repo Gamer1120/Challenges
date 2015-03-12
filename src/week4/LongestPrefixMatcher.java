@@ -1,3 +1,4 @@
+package week4;
 /**
  * @author Sven Konings s1534130 en Michael Koopman s1401335
  */
