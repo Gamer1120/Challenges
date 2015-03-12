@@ -105,7 +105,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 					sendPacket(neighbour.getKey());
 				}
 			}
-		} else if (send || forwardingTable.size() > count) {
+		} else if (send || !ownNodes.isEmpty()) {
 			sendPacket(address);
 		}
 	}
