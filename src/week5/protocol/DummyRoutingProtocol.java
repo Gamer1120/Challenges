@@ -16,11 +16,13 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 	private LinkLayer linkLayer;
 	private HashMap<Integer, Integer> links = new HashMap<Integer, Integer>();
 	private ConcurrentHashMap<Integer, BasicRoute> forwardingTable = new ConcurrentHashMap<Integer, BasicRoute>();
+	private int address;
+	boolean changed;
 
 	@Override
 	public void init(LinkLayer linkLayer) {
 		this.linkLayer = linkLayer;
-		int address = this.linkLayer.getOwnAddress();
+		this.address = this.linkLayer.getOwnAddress();
 		this.forwardingTable.put(address, new BasicRoute(address, 0));
 		sendPacket();
 	}
@@ -31,7 +33,9 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			while (true) {
 				// Try to receive a packet
 				Packet packet = linkLayer.receive();
+				changed = false;
 				if (packet != null) {
+					address = packet.getSourceAddress();
 					receive(packet);
 				}
 				updateTable();
@@ -60,7 +64,6 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 	}
 
 	private void receive(Packet packet) {
-		int address = packet.getSourceAddress();
 		int cost = linkLayer.getLinkCost(address);
 		DataTable packetTable = packet.getData();
 		HashSet<Integer> packetNodes = new HashSet<Integer>();
@@ -72,7 +75,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 		HashSet<Integer> ownNodes = new HashSet<Integer>(
 				forwardingTable.keySet());
 		boolean send = false;
-		boolean changed = false;
+
 		for (int i = 0; i < packetTable.getNRows(); i++) {
 			Integer[] currRow = packetTable.getRow(i);
 			int destination = currRow[0];
@@ -99,19 +102,12 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			changed = true;
 			forwardingTable.remove(node);
 		}
-		if (changed) {
-			for (Entry<Integer, Integer> neighbour : links.entrySet()) {
-				if (neighbour.getKey() != address && neighbour.getValue() != -1) {
-					sendPacket(neighbour.getKey());
-				}
-			}
-		} else if (send || !ownNodes.isEmpty()) {
+		if (!changed && (send || !ownNodes.isEmpty())) {
 			sendPacket(address);
 		}
 	}
 
 	private void updateTable() {
-		boolean changed = false;
 		HashSet<Integer> toRemove = new HashSet<Integer>();
 		for (int node : forwardingTable.keySet()) {
 			int cost = linkLayer.getLinkCost(node);
@@ -148,7 +144,11 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			}
 		}
 		if (changed) {
-			sendPacket();
+			for (Entry<Integer, Integer> node : links.entrySet()) {
+				if (node.getKey() != address && node.getValue() != -1) {
+					sendPacket(node.getKey());
+				}
+			}
 		}
 	}
 
