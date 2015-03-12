@@ -18,6 +18,7 @@ public class BasicRoute extends AbstractRoute {
 		return cost;
 	}
 
+	@Override
 	public String toString() {
 		return nextHop + ":" + cost;
 	}

@@ -43,14 +43,18 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 	}
 
 	private void sendPacket() {
+		sendPacket(0);
+	}
+
+	private void sendPacket(int destination) {
 		DataTable table = new DataTable(3);
 		for (Entry<Integer, BasicRoute> entry : forwardingTable.entrySet()) {
 			BasicRoute route = entry.getValue();
 			table.addRow(new Integer[] { entry.getKey(), route.getCost(),
 					route.nextHop });
 		}
-		linkLayer
-				.transmit(new Packet(this.linkLayer.getOwnAddress(), 0, table));
+		linkLayer.transmit(new Packet(this.linkLayer.getOwnAddress(),
+				destination, table));
 	}
 
 	private void receive(Packet packet) {
