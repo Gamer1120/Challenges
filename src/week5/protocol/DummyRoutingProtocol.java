@@ -76,6 +76,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			}
 		}
 		if (changed) {
+			System.out.println(forwardingTable);
 			sendPacket();
 		}
 	}
@@ -116,6 +117,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			}
 		}
 		if (changed) {
+			System.out.println(forwardingTable);
 			sendPacket();
 		}
 	}
