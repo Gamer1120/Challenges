@@ -30,12 +30,29 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 				// Try to receive a packet
 				Packet packet = linkLayer.receive();
 				if (packet != null) {
+					int address = packet.getSourceAddress();
+					int cost = linkLayer.getLinkCost(address);
 					if (packet.getData().getNColumns() == 0) {
-						int address = packet.getSourceAddress();
-						int cost = linkLayer.getLinkCost(address);
-						forwardingTable.put(address, new BasicRoute(address, cost));
+
+						forwardingTable.put(address, new BasicRoute(address,
+								cost));
 					} else {
-						
+						DataTable packetTable = packet.getData();
+						for (int i = 0; i < packetTable.getNRows(); i++) {
+							Integer[] currRow = packetTable.getRow(i);
+							int destination = currRow[0];
+							int totalCost = cost + currRow[1];
+							//int nextHop = currRow[2];
+							if (forwardingTable.containsKey(destination)) {
+								if (forwardingTable.get(destination).getCost() > (totalCost)) {
+									forwardingTable.put(destination,
+											new BasicRoute(address, totalCost));
+								}
+							} else {
+								forwardingTable.put(destination,
+										new BasicRoute(address, totalCost));
+							}
+						}
 					}
 					DataTable table = new DataTable(3);
 					for (Entry<Integer, BasicRoute> entry : forwardingTable
