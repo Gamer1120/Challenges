@@ -56,8 +56,10 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 		DataTable table = new DataTable(3);
 		for (Entry<Integer, BasicRoute> entry : forwardingTable.entrySet()) {
 			BasicRoute route = entry.getValue();
+			if (destination != route.nextHop) {
 			table.addRow(new Integer[] { entry.getKey(), route.getCost(),
 					route.nextHop });
+			}
 		}
 		linkLayer.transmit(new Packet(this.linkLayer.getOwnAddress(),
 				destination, table));
@@ -117,6 +119,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 					if (cost == -1) {
 						toRemove.add(node);
 					} else if (links.get(node) == -1) {
+						toRemove.add(node);
 						sendPacket(node);
 					} else {
 						int difference = cost - links.get(node);
