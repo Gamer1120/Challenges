@@ -14,6 +14,7 @@ import week5.client.Packet;
 
 public class DummyRoutingProtocol implements IRoutingProtocol {
 	private LinkLayer linkLayer;
+	// map with cost to all other known nodes
 	private HashMap<Integer, Integer> links = new HashMap<Integer, Integer>();
 	private ConcurrentHashMap<Integer, BasicRoute> forwardingTable = new ConcurrentHashMap<Integer, BasicRoute>();
 
@@ -49,6 +50,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 	private void sendPacket(int destination) {
 		System.out.println("TO " + destination);
 		System.out.println(forwardingTable);
+		// generate a table with node, cost, next hop
 		DataTable table = new DataTable(3);
 		for (Entry<Integer, BasicRoute> entry : forwardingTable.entrySet()) {
 			BasicRoute route = entry.getValue();
@@ -62,6 +64,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 	private void receive(Packet packet) {
 		int address = packet.getSourceAddress();
 		int cost = linkLayer.getLinkCost(address);
+		// A table with all nodes from the sender
 		DataTable packetTable = packet.getData();
 		HashSet<Integer> packetNodes = new HashSet<Integer>();
 		for (Entry<Integer, BasicRoute> entry : forwardingTable.entrySet()) {
@@ -95,6 +98,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 						+ nodeCost));
 			}
 		}
+		// if we can't reach a node anymore through the sender
 		for (int node : packetNodes) {
 			changed = true;
 			forwardingTable.remove(node);
@@ -105,6 +109,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 					sendPacket(neighbour.getKey());
 				}
 			}
+		// if we have a lower cost or a node the sender doesn't have
 		} else if (send || !ownNodes.isEmpty()) {
 			sendPacket(address);
 		}
