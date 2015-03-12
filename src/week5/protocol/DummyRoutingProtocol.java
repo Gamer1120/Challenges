@@ -99,7 +99,11 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			forwardingTable.remove(node);
 		}
 		if (changed) {
-			sendPacket();
+			for (Entry<Integer, Integer> neighbour : links.entrySet()) {
+				if (neighbour.getKey() != address && neighbour.getValue() != -1) {
+					sendPacket(neighbour.getKey());
+				}
+			}
 		} else if (send || forwardingTable.size() > count) {
 			sendPacket(address);
 		}
