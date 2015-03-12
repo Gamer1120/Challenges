@@ -23,7 +23,7 @@ public interface IRoutingProtocol extends Runnable {
 	void init(LinkLayer linkLayer);
 
 	/**
-	 * The method is called by the framework  during and after the simulation, to
+	 * The method is called by the framework during and after the simulation, to
 	 * retrieve the local forwarding table.
 	 * 
 	 * @return ForwardingTable

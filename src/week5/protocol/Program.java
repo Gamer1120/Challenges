@@ -11,7 +11,7 @@ import week5.client.RoutingChallengeClient.SimulationState;
 public class Program {
 	// Change to your group number (e.g. use a student number)
 	private static int groupId = 1401335;
-	
+
 	// Change to your group password (doesn't matter what it is,
 	// as long as everyone in the group uses the same string)
 	private static String password = "kip";
@@ -32,7 +32,8 @@ public class Program {
 	 * 
 	 * DO NOT EDIT BELOW THIS LINE
 	 */
-	public static void start(Integer id, Class<? extends IRoutingProtocol> protocol) {
+	public static void start(Integer id,
+			Class<? extends IRoutingProtocol> protocol) {
 		protocolImpl = protocol;
 		main(new String[] { id.toString() });
 	}
@@ -49,7 +50,7 @@ public class Program {
 			// Initialize communication with the emulation server
 			RoutingChallengeClient client = new RoutingChallengeClient(
 					serverAddress, serverPort, group, password);
-			
+
 			LinkLayer linkLayer = new LinkLayer(client);
 
 			// Wait for cue to start simulation
@@ -59,7 +60,8 @@ public class Program {
 
 			boolean startCommand = false;
 			InputStream inputStream = new BufferedInputStream(System.in);
-			while (!client.IsSimulationRunning() && client.getSimulationState() != SimulationState.Finished) {
+			while (!client.IsSimulationRunning()
+					&& client.getSimulationState() != SimulationState.Finished) {
 				if (!startCommand && inputStream.available() > 0) {
 					client.RequestStart();
 					startCommand = true;
@@ -103,8 +105,9 @@ public class Program {
 						Thread.sleep(10);
 					}
 
-					System.out.println("Test completed. Stopping protocol implementation...");
-					
+					System.out
+							.println("Test completed. Stopping protocol implementation...");
+
 					protocolThread.interrupt();
 					protocolThread.join();
 
@@ -129,7 +132,6 @@ public class Program {
 			e.printStackTrace();
 		}
 	}
-	
 
 	private static IRoutingProtocol createProtocol() {
 		try {

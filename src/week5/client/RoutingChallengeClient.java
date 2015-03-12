@@ -171,10 +171,8 @@ public class RoutingChallengeClient implements Runnable {
 						clearControlMessage();
 						Stop();
 					} else if (message.startsWith("INFO")) {
-						System.err
-						.println("Info: "
-								+ message.substring(message
-										.indexOf(' ') + 1));
+						System.err.println("Info: "
+								+ message.substring(message.indexOf(' ') + 1));
 						clearControlMessage();
 					} else if (message.startsWith("START")) {
 						Start();
@@ -186,8 +184,8 @@ public class RoutingChallengeClient implements Runnable {
 						clearControlMessage();
 					} else if (message.startsWith("ADDRESS")) {
 						if (message.split(" ").length > 1) {
-							this.address = Integer.parseInt(message
-									.split(" ")[1]);
+							this.address = Integer
+									.parseInt(message.split(" ")[1]);
 						}
 						clearControlMessage();
 					} else if (message.startsWith("COST")) {

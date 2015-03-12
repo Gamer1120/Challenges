@@ -2,6 +2,7 @@ package week5.client;
 
 /**
  * Link layer interface, used for clarity
+ * 
  * @author Jaco ter Braak, Twente University
  * @version 17-12-2013
  */
@@ -19,6 +20,7 @@ public class LinkLayer {
 
 	/**
 	 * Gets the address within the network, associated with this interface
+	 * 
 	 * @return address
 	 */
 	public int getOwnAddress() {
@@ -27,6 +29,7 @@ public class LinkLayer {
 
 	/**
 	 * Gets the cost of the connected link
+	 * 
 	 * @return The cost as a positive integer (or -1 if there is no link)
 	 */
 	public int getLinkCost(int destination) {
@@ -35,6 +38,7 @@ public class LinkLayer {
 
 	/**
 	 * Transmits a packet
+	 * 
 	 * @param packet
 	 * @return the result of the transmission
 	 */
@@ -44,6 +48,7 @@ public class LinkLayer {
 
 	/**
 	 * Receives a packet (if any)
+	 * 
 	 * @return the packet (or null if no packet is available)
 	 */
 	public Packet receive() {

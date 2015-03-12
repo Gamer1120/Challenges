@@ -17,9 +17,14 @@ public class Packet {
 
 	/**
 	 * Instantiates a new packet
-	 * @param sourceAddress int
-	 * @param destinationAddress int
-	 * @param data a DataTable object. Can be a DataTable object with 0 columns, to represent no data.
+	 * 
+	 * @param sourceAddress
+	 *            int
+	 * @param destinationAddress
+	 *            int
+	 * @param data
+	 *            a DataTable object. Can be a DataTable object with 0 columns,
+	 *            to represent no data.
 	 */
 	public Packet(int sourceAddress, int destinationAddress, DataTable data) {
 		this.sourceAddress = sourceAddress;
