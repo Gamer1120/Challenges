@@ -1,8 +1,13 @@
 package week5.protocol;
 
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import week5.client.*;
+import week5.client.BasicRoute;
+import week5.client.DataTable;
+import week5.client.IRoutingProtocol;
+import week5.client.LinkLayer;
+import week5.client.Packet;
 
 public class DummyRoutingProtocol implements IRoutingProtocol {
 	private LinkLayer linkLayer;
@@ -25,9 +30,23 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 				// Try to receive a packet
 				Packet packet = linkLayer.receive();
 				if (packet != null) {
-					forwardingTable.put(packet.getSourceAddress(),
-							new BasicRoute(packet.getSourceAddress()));
-					// Do something with the packet
+					if (packet.getData().getNColumns() == 0) {
+						int address = packet.getSourceAddress();
+						int cost = linkLayer.getLinkCost(address);
+						forwardingTable.put(address, new BasicRoute(address, cost));
+					} else {
+						
+					}
+					DataTable table = new DataTable(3);
+					for (Entry<Integer, BasicRoute> entry : forwardingTable
+							.entrySet()) {
+						BasicRoute route = entry.getValue();
+						table.addRow(new Integer[] { entry.getKey(),
+								route.getCost(), route.nextHop });
+					}
+					Packet broadcastPacket = new Packet(
+							this.linkLayer.getOwnAddress(), 0, table);
+					this.linkLayer.transmit(broadcastPacket);
 				}
 
 				Thread.sleep(10);

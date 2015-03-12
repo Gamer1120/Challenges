@@ -7,7 +7,14 @@ package week5.client;
  * @version 09-03-2015
  */
 public class BasicRoute extends AbstractRoute {
-	public BasicRoute(int nextHop) {
+	private int cost;
+
+	public BasicRoute(int nextHop, int cost) {
 		this.nextHop = nextHop;
+		this.cost = cost;
+	}
+
+	public int getCost() {
+		return cost;
 	}
 }

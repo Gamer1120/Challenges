@@ -1,10 +1,15 @@
 package week5.client;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.ProtocolException;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.bind.DatatypeConverter;
@@ -155,6 +160,7 @@ public class RoutingChallengeClient implements Runnable {
 	/**
 	 * Handles communication between the server and the protocol implementation
 	 */
+	@Override
 	public void run() {
 		boolean stopThread = false;
 		while (!stopThread && simulationState != SimulationState.Finished) {

@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import week5.client.*;
+import week5.client.IRoutingProtocol;
+import week5.client.LinkLayer;
+import week5.client.RoutingChallengeClient;
 import week5.client.RoutingChallengeClient.SimulationState;
 
 public class Program {
@@ -135,7 +137,7 @@ public class Program {
 
 	private static IRoutingProtocol createProtocol() {
 		try {
-			return (IRoutingProtocol) protocolImpl.getConstructor(new Class[0])
+			return protocolImpl.getConstructor(new Class[0])
 					.newInstance(new Object[0]);
 		} catch (InstantiationException | IllegalAccessException
 				| IllegalArgumentException | InvocationTargetException

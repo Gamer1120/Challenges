@@ -1,6 +1,5 @@
 package week3.protocol;
 
-import week3.protocol.TransmissionType;
 
 /**
  * Instructs the physical layer as to what action should be taking during the current timeslot

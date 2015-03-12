@@ -1,6 +1,7 @@
 package week5.client;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for transmitting data to other nodes. Table format is used to make it

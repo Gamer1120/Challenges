@@ -1,7 +1,11 @@
 package week2.protocol;
 
-import java.io.*;
-import week2.client.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import week2.client.DRDTChallengeClient;
+import week2.client.NetworkLayer;
 
 /**
  * Entry point of the program. Starts the client and links the used MAC
