@@ -105,6 +105,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			}
 		}
 		for (int node : toRemove) {
+			forwardingTable.remove(node);
 			Iterator<Entry<Integer, BasicRoute>> entries = forwardingTable
 					.entrySet().iterator();
 			while (entries.hasNext()) {
