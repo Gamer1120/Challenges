@@ -29,12 +29,12 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 	public void run() {
 		try {
 			while (true) {
-				updateTable();
 				// Try to receive a packet
 				Packet packet = linkLayer.receive();
 				if (packet != null) {
 					receive(packet);
 				}
+				updateTable();
 				Thread.sleep(10);
 			}
 		} catch (InterruptedException e) {
