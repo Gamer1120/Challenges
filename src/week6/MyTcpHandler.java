@@ -2,6 +2,19 @@ package week6;
 
 class MyTcpHandler extends TcpHandler {
 
+	// IPv6 header
+	public final static String VERSION = "0110";
+	public final static String TRAFFIC_CLASS = "00000000";
+	public final static String FLOWLABEL = "00000000000000000000";
+	// Payload Length (16 bits)
+	public final static String NEXT_HEADER = "00000110";
+	public final static String HOP_LIMIT = "01000000";
+	public final static String SOURCE = "00100000000000010000011001111100001001010110010010100001010101101000110010000111111011111110100010101110111100101101010001100000";
+	public final static String DESTINATION = "00100000000000010000011001111100001001010110010010100001011100000000101000000000001001111111111111111110000100011100111011001011";
+
+	// TCP header
+	// TODO
+
 	public static void main(String[] args) {
 		new MyTcpHandler();
 	}
