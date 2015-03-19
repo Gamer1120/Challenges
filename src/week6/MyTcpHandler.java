@@ -15,8 +15,8 @@ class MyTcpHandler extends TcpHandler {
 	public final static String DESTINATION = "00100000000000010000011001111100001001010110010010100001011100000000101000000000001001111111111111111110000100011100111011001011";
 
 	// TCP header
-	public final static String SOURCE_PORT = "0001111000011111";
-	public final static String DESTINATION_PORT = "0001111000010101";
+	public final static String SOURCE_PORT = "0000101111010001";
+	public final static String DESTINATION_PORT = "0001111000011111";
 	// Sequence number (32 bits)
 	// Acknowledgement nummer (32 bits)
 	public final static String DATA_OFFSET = "0101";
