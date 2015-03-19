@@ -33,6 +33,7 @@ class MyTcpHandler extends TcpHandler {
 
 	// HTTP GET
 	public final static String GET_REQUEST = "01000111010001010101010000100000001011110011111101101110011100100011110100110001001101000011000000110001001100110011001100110101001000000100100001010100010101000101000000101111001100010010111000110001000011010000101001001000011011110111001101110100001110100010000001011011001100100011000000110000001100010011101000110110001101110110001100111010001100100011010100110110001101000011101001100001001100010011011100110000001110100110000100110000001100000011101000110010001101110110011001100110001110100110011001100101001100010011000100111010011000110110010101100011011000100101110100001101000010100000110100001010";
+
 	public static void main(String[] args) {
 		new MyTcpHandler();
 	}
@@ -40,25 +41,13 @@ class MyTcpHandler extends TcpHandler {
 	public MyTcpHandler() {
 		super();
 		handshake();
-		boolean done = false;
-		while (!done) {
-			System.out.println(Arrays.toString(this.receiveData(10000)));
-			// TODO: Implement your client for the server by combining:
-			// - Send packets, use this.sendData(byte[]).
-			// The data passed to sendData should contain raw
-			// IP/TCP/(optionally HTTP) headers and data.
-			// - Receive packets, you can retreive byte arrays using
-			// byte[] this.receiveData(long timeout).
-			// The timeout passed to this function will indicate the maximum
-			// amount of
-			// milliseconds for receiveData to complete. When the timeout
-			// expires before a
-			// packet is received, an empty array will be returned.
-			//
-			// The data you'll receive and send will and should contain all
-			// packet
-			// data from the network layer and up.
-		}
+		// Send fyn packet
+		byte[] currentPacket = generatePacket("0000000000010100",
+				"00000000000000000000000000000000",
+				"00000000000000000000000000000000", "000001",
+				"0000000000000000");
+		// Send packet
+		this.sendData(currentPacket);
 	}
 
 	public void handshake() {
