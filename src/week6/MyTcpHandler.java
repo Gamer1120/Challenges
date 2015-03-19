@@ -1,25 +1,15 @@
 package week6;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 class MyTcpHandler extends TcpHandler {
-	
-	private byte[] currentPacket;
-	
+
 	public static void main(String[] args) {
-		// new MyTcpHandler();
-		System.out.println(stringToByte("001000001010000110000111"));
+		new MyTcpHandler();
 	}
 
 	public MyTcpHandler() {
 		super();
 		// Send initial TCP packet
-		currentPacket = new byte[0];
-		// Add version
-		appendBArray(new byte[] {96});
-		// 
-		
+		byte[] currentPacket = stringToByte("00000000");
 		// Send packet
 		this.sendData(currentPacket);
 		boolean done = false;
@@ -57,12 +47,11 @@ class MyTcpHandler extends TcpHandler {
 		}
 		return byteArray;
 	}
-	
-	public void appendBArray(byte[] toAppend){
-		byte[] retByte = new byte[currentPacket.length + toAppend.length];
-		System.arraycopy(currentPacket, 0, retByte, 0, currentPacket.length);
-		System.arraycopy(toAppend, 0, retByte, currentPacket.length, toAppend.length);
-		currentPacket = retByte;
-		System.out.println(Arrays.toString(currentPacket));
+
+	public byte[] mergeByteArray(byte[] array1, byte[] array2) {
+		byte[] retByte = new byte[array1.length + array2.length];
+		System.arraycopy(array1, 0, retByte, 0, array1.length);
+		System.arraycopy(array2, 0, retByte, array1.length, array2.length);
+		return retByte;
 	}
 }
