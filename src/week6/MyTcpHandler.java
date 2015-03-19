@@ -1,5 +1,7 @@
 package week6;
 
+import java.util.Arrays;
+
 class MyTcpHandler extends TcpHandler {
 
 	// IPv6 header
@@ -25,7 +27,7 @@ class MyTcpHandler extends TcpHandler {
 	// RST (1 bit)
 	// SYN (1 bit)
 	// FIN (1 bit)
-	// Window (16 bits)
+	public final static String WINDOW = "1111111111111111";
 	// Checksum (16 bits)
 	public final static String URGENT_POINTER = "0000000000000000";
 
@@ -36,12 +38,15 @@ class MyTcpHandler extends TcpHandler {
 	public MyTcpHandler() {
 		super();
 		// Send initial TCP packet
-		byte[] currentPacket = stringToByte(VERSION + TRAFFIC_CLASS + FLOWLABEL
-				+ "" + NEXT_HEADER + HOP_LIMIT + SOURCE + DESTINATION);
+		byte[] currentPacket = generateTCPPacket("0000000000010100",
+				"00000000000000000000000000000000",
+				"00000000000000000000000000000000", "000010",
+				"0000000000000000");
 		// Send packet
 		this.sendData(currentPacket);
 		boolean done = false;
 		while (!done) {
+			System.out.println(Arrays.toString(this.receiveData(1000)));
 			// TODO: Implement your client for the server by combining:
 			// - Send packets, use this.sendData(byte[]).
 			// The data passed to sendData should contain raw
@@ -60,6 +65,14 @@ class MyTcpHandler extends TcpHandler {
 		}
 	}
 
+	public static byte[] generateTCPPacket(String payload, String seq,
+			String ack, String flags, String checksum) {
+		return stringToByte(VERSION + TRAFFIC_CLASS + FLOWLABEL + payload
+				+ NEXT_HEADER + HOP_LIMIT + SOURCE + DESTINATION + SOURCE_PORT
+				+ DESTINATION_PORT + seq + ack + DATA_OFFSET + RESERVED + flags
+				+ WINDOW + checksum + URGENT_POINTER);
+	}
+
 	public static byte[] stringToByte(String bytes) {
 		int length = bytes.length() / 8;
 		byte[] byteArray = new byte[length];
@@ -76,7 +89,7 @@ class MyTcpHandler extends TcpHandler {
 		return byteArray;
 	}
 
-	public byte[] mergeByteArray(byte[] array1, byte[] array2) {
+	public static byte[] mergeByteArray(byte[] array1, byte[] array2) {
 		byte[] retByte = new byte[array1.length + array2.length];
 		System.arraycopy(array1, 0, retByte, 0, array1.length);
 		System.arraycopy(array2, 0, retByte, array1.length, array2.length);
