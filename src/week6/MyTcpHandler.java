@@ -20,14 +20,14 @@ class MyTcpHandler extends TcpHandler {
 	// Sequence number (32 bits)
 	// Acknowledgement nummer (32 bits)
 	public final static String DATA_OFFSET = "0101";
-	public final static String RESERVED = "000000000000000000000000";
+	public final static String RESERVED = "000000";
 	// URG (1 bit)
 	// ACK (1 bit)
 	// PSH (1 bit)
 	// RST (1 bit)
 	// SYN (1 bit)
 	// FIN (1 bit)
-	public final static String WINDOW = "1111111111111111";
+	public final static String WINDOW = "1000000110000001";
 	// Checksum (16 bits)
 	public final static String URGENT_POINTER = "0000000000000000";
 
