@@ -61,7 +61,7 @@ class MyTcpHandler extends TcpHandler {
 
 	public void handshake() {
 		// Send syn packet
-		byte[] currentPacket = generateTCPPacket("0000000000010100",
+		byte[] currentPacket = generatePacket("0000000000010100",
 				"00000000000000000000000000000000",
 				"00000000000000000000000000000000", "000010",
 				"0000000000000000");
@@ -84,18 +84,23 @@ class MyTcpHandler extends TcpHandler {
 					.format("%8s", Integer.toBinaryString(reply[i] & 0xFF))
 					.replace(' ', '0');
 		}
-		currentPacket = generateTCPPacket("0000000000010100", seq, ack,
-				"010000", "0000000000000000");
+		currentPacket = generatePacket("0000000000010100", seq, ack, "010000",
+				"0000000000000000");
 		// Send ack packet
 		this.sendData(currentPacket);
 	}
 
-	public static byte[] generateTCPPacket(String payload, String seq,
-			String ack, String flags, String checksum) {
+	public static byte[] generatePacket(String payload, String seq, String ack,
+			String flags, String checksum) {
+		return generatePacket(payload, seq, ack, flags, checksum, "");
+	}
+
+	public static byte[] generatePacket(String payload, String seq, String ack,
+			String flags, String checksum, String http) {
 		return stringToByte(VERSION + TRAFFIC_CLASS + FLOWLABEL + payload
 				+ NEXT_HEADER + HOP_LIMIT + SOURCE + DESTINATION + SOURCE_PORT
 				+ DESTINATION_PORT + seq + ack + DATA_OFFSET + RESERVED + flags
-				+ WINDOW + checksum + URGENT_POINTER);
+				+ WINDOW + checksum + URGENT_POINTER + http);
 	}
 
 	public static byte[] stringToByte(String bytes) {
