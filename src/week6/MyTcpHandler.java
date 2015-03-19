@@ -42,10 +42,6 @@ class MyTcpHandler extends TcpHandler {
 				"00000000000000000000000000000000",
 				"00000000000000000000000000000000", "000010",
 				"0000000000000000");
-		for (byte bits : currentPacket) {
-			System.out.println(String.format("%8s",
-					Integer.toBinaryString(bits & 0xFF)).replace(' ', '0'));
-		}
 		// Send packet
 		this.sendData(currentPacket);
 		boolean done = false;
