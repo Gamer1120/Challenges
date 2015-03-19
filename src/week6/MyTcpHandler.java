@@ -64,7 +64,7 @@ class MyTcpHandler extends TcpHandler {
 
 	public void handshake() {
 		// Send syn packet
-		byte[] currentPacket = generatePacket("0000000001110000",
+		byte[] currentPacket = generatePacket("0000000000010100",
 				"00000000000000000000000000000000",
 				"00000000000000000000000000000000", "000010",
 				"0000000000000000");
@@ -87,7 +87,7 @@ class MyTcpHandler extends TcpHandler {
 					.format("%8s", Integer.toBinaryString(reply[i] & 0xFF))
 					.replace(' ', '0');
 		}
-		currentPacket = generatePacket("0000000000110001", seq, ack, "011000",
+		currentPacket = generatePacket("0000000001110000", seq, ack, "011000",
 				"0000000000000000", GET_REQUEST);
 		// Send ack packet
 		this.sendData(currentPacket);
