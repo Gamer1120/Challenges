@@ -13,7 +13,21 @@ class MyTcpHandler extends TcpHandler {
 	public final static String DESTINATION = "00100000000000010000011001111100001001010110010010100001011100000000101000000000001001111111111111111110000100011100111011001011";
 
 	// TCP header
-	// TODO
+	public final static String SOURCE_PORT = "0000101111010001";
+	public final static String DESTINATION_PORT = "0001111000010101";
+	// Sequence number (32 bits)
+	// Acknowledgement nummer (32 bits)
+	public final static String DATA_OFFSET = "0101";
+	public final static String RESERVED = "000000000000000000000000";
+	// URG (1 bit)
+	// ACK (1 bit)
+	// PSH (1 bit)
+	// RST (1 bit)
+	// SYN (1 bit)
+	// FIN (1 bit)
+	// Window (16 bits)
+	// Checksum (16 bits)
+	public final static String URGENT_POINTER = "0000000000000000";
 
 	public static void main(String[] args) {
 		new MyTcpHandler();
@@ -22,7 +36,8 @@ class MyTcpHandler extends TcpHandler {
 	public MyTcpHandler() {
 		super();
 		// Send initial TCP packet
-		byte[] currentPacket = stringToByte("00000000");
+		byte[] currentPacket = stringToByte(VERSION + TRAFFIC_CLASS + FLOWLABEL
+				+ "" + NEXT_HEADER + HOP_LIMIT + SOURCE + DESTINATION);
 		// Send packet
 		this.sendData(currentPacket);
 		boolean done = false;
