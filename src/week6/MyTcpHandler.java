@@ -46,7 +46,7 @@ class MyTcpHandler extends TcpHandler {
 		this.sendData(currentPacket);
 		boolean done = false;
 		while (!done) {
-			System.out.println(Arrays.toString(this.receiveData(1000)));
+			System.out.println(Arrays.toString(this.receiveData(10000)));
 			// TODO: Implement your client for the server by combining:
 			// - Send packets, use this.sendData(byte[]).
 			// The data passed to sendData should contain raw
