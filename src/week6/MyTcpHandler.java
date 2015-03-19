@@ -9,13 +9,13 @@ class MyTcpHandler extends TcpHandler {
 	public final static String TRAFFIC_CLASS = "00000000";
 	public final static String FLOWLABEL = "00000000000000000000";
 	// Payload Length (16 bits)
-	public final static String NEXT_HEADER = "00000110";
+	public final static String NEXT_HEADER = "11111101";
 	public final static String HOP_LIMIT = "01000000";
 	public final static String SOURCE = "00100000000000010000011000010000000110010000100011110000000000000110000110011110100111111101010100100100001110000101011010011110";
 	public final static String DESTINATION = "00100000000000010000011001111100001001010110010010100001011100000000101000000000001001111111111111111110000100011100111011001011";
 
 	// TCP header
-	public final static String SOURCE_PORT = "0000101111010001";
+	public final static String SOURCE_PORT = "0001111000011111";
 	public final static String DESTINATION_PORT = "0001111000010101";
 	// Sequence number (32 bits)
 	// Acknowledgement nummer (32 bits)
