@@ -87,8 +87,8 @@ class MyTcpHandler extends TcpHandler {
 					.format("%8s", Integer.toBinaryString(reply[i] & 0xFF))
 					.replace(' ', '0');
 		}
-		currentPacket = generatePacket("0000000000010100", seq, ack, "010000",
-				"0000000000000000");
+		currentPacket = generatePacket("0000000000101101", seq, ack, "010000",
+				"0000000000000000", GET_REQUEST);
 		// Send ack packet
 		this.sendData(currentPacket);
 	}
