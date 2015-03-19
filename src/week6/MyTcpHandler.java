@@ -1,13 +1,26 @@
 package week6;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 class MyTcpHandler extends TcpHandler {
+	
+	private byte[] currentPacket;
+	
 	public static void main(String[] args) {
 		new MyTcpHandler();
 	}
 
 	public MyTcpHandler() {
 		super();
-
+		// Send initial TCP packet
+		currentPacket = new byte[0];
+		// Add version
+		appendBArray(new byte[] {96});
+		// 
+		
+		// Send packet
+		this.sendData(currentPacket);
 		boolean done = false;
 		while (!done) {
 			// TODO: Implement your client for the server by combining:
@@ -23,5 +36,13 @@ class MyTcpHandler extends TcpHandler {
 			//           The data you'll receive and send will and should contain all packet 
 			//           data from the network layer and up.
 		}   
+	}
+	
+	public void appendBArray(byte[] toAppend){
+		byte[] retByte = new byte[currentPacket.length + toAppend.length];
+		System.arraycopy(currentPacket, 0, retByte, 0, currentPacket.length);
+		System.arraycopy(toAppend, 0, retByte, currentPacket.length, toAppend.length);
+		currentPacket = retByte;
+		System.out.println(Arrays.toString(currentPacket));
 	}
 }
