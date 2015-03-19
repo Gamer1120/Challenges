@@ -27,7 +27,7 @@ class MyTcpHandler extends TcpHandler {
 	// RST (1 bit)
 	// SYN (1 bit)
 	// FIN (1 bit)
-	public final static String WINDOW = "1000000110000001";
+	public final static String WINDOW = "1111111111111111";
 	// Checksum (16 bits)
 	public final static String URGENT_POINTER = "0000000000000000";
 
@@ -42,6 +42,10 @@ class MyTcpHandler extends TcpHandler {
 				"00000000000000000000000000000000",
 				"00000000000000000000000000000000", "000010",
 				"0000000000000000");
+		for (byte bits : currentPacket) {
+			System.out.println(String.format("%8s",
+					Integer.toBinaryString(bits & 0xFF)).replace(' ', '0'));
+		}
 		// Send packet
 		this.sendData(currentPacket);
 		boolean done = false;
@@ -78,13 +82,8 @@ class MyTcpHandler extends TcpHandler {
 		byte[] byteArray = new byte[length];
 		for (int i = 0; i < length; i++) {
 			String currentString = bytes.substring(8 * i, 8 * (i + 1));
-			if (currentString.startsWith("1")) {
-				currentString = "-" + currentString.substring(1);
-			} else if (currentString.startsWith("0")) {
-				currentString = "+" + currentString.substring(1);
-			}
-			byte currentByte = Byte.parseByte(currentString, 2);
-			byteArray[i] = currentByte;
+			int currentByte = Integer.parseInt(currentString, 2);
+			byteArray[i] = (byte) currentByte;
 		}
 		return byteArray;
 	}
