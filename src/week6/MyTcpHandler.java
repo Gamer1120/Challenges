@@ -11,7 +11,7 @@ class MyTcpHandler extends TcpHandler {
 	// Payload Length (16 bits)
 	public final static String NEXT_HEADER = "00000110";
 	public final static String HOP_LIMIT = "01000000";
-	public final static String SOURCE = "00100000000000010000011001111100001001010110010010100001010101101000110010000111111011111110100010101110111100101101010001100000";
+	public final static String SOURCE = "00100000000000010000011000010000000110010000100011110000000000000110000110011110100111111101010100100100001110000101011010011110";
 	public final static String DESTINATION = "00100000000000010000011001111100001001010110010010100001011100000000101000000000001001111111111111111110000100011100111011001011";
 
 	// TCP header
@@ -37,13 +37,7 @@ class MyTcpHandler extends TcpHandler {
 
 	public MyTcpHandler() {
 		super();
-		// Send initial TCP packet
-		byte[] currentPacket = generateTCPPacket("0000000000010100",
-				"00000000000000000000000000000000",
-				"00000000000000000000000000000000", "000010",
-				"0000000000000000");
-		// Send packet
-		this.sendData(currentPacket);
+		handshake();
 		boolean done = false;
 		while (!done) {
 			System.out.println(Arrays.toString(this.receiveData(10000)));
@@ -63,6 +57,37 @@ class MyTcpHandler extends TcpHandler {
 			// packet
 			// data from the network layer and up.
 		}
+	}
+
+	public void handshake() {
+		// Send syn packet
+		byte[] currentPacket = generateTCPPacket("0000000000010100",
+				"00000000000000000000000000000000",
+				"00000000000000000000000000000000", "000010",
+				"0000000000000000");
+		// Send packet
+		this.sendData(currentPacket);
+		// Receive syn+ack
+		byte[] reply = this.receiveData(10000);
+		String ack = "";
+		for (int i = 44; i < 47; i++) {
+			ack += String
+					.format("%8s", Integer.toBinaryString(reply[i] & 0xFF))
+					.replace(' ', '0');
+		}
+		ack += String.format("%8s",
+				Integer.toBinaryString((reply[47] + 1) & 0xFF)).replace(' ',
+				'0');
+		String seq = "";
+		for (int i = 48; i < 52; i++) {
+			seq += String
+					.format("%8s", Integer.toBinaryString(reply[i] & 0xFF))
+					.replace(' ', '0');
+		}
+		currentPacket = generateTCPPacket("0000000000010100", seq, ack,
+				"010000", "0000000000000000");
+		// Send ack packet
+		this.sendData(currentPacket);
 	}
 
 	public static byte[] generateTCPPacket(String payload, String seq,
