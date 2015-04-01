@@ -14,11 +14,12 @@ import week8.Utils.Utils;
  *
  */
 public class WeightedLocationFinder implements LocationFinder {
+	public final static int MAX_RSSI = 100;
+	public final static int EXPONENT = 4;
 	private HashMap<String, Position> knownLocations; // Contains the known
 														// locations of APs. The
 														// long is a MAC
 														// address.
-	private final static int EXPONENT = 4;
 
 	public WeightedLocationFinder() {
 		knownLocations = Utils.getKnownLocations(); // Put the known locations
@@ -45,14 +46,13 @@ public class WeightedLocationFinder implements LocationFinder {
 		for (MacRssiPair pair : data) {
 			String mac = pair.getMacAsString();
 			if (knownLocations.containsKey(mac)) {
-				int signal = pair.getRssi() + 100;
+				int signal = pair.getRssi() + MAX_RSSI;
 				Position ret = knownLocations.get(mac);
 				weight += Math.pow(signal, EXPONENT);
 				x += ret.getX() * Math.pow(signal, EXPONENT);
 				y += ret.getY() * Math.pow(signal, EXPONENT);
 			}
 		}
-		System.out.println(x + " " + weight);
 		return new Position(x / weight, y / weight);
 	}
 
