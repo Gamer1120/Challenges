@@ -11,8 +11,6 @@ import week8.Utils.*;
  *
  */
 public class AverageLocationFinder implements LocationFinder {
-	public final static int MAX_RSSI = 100;
-
 	private HashMap<String, Position> knownLocations; // Contains the known
 														// locations of APs. The
 														// long is a MAC
@@ -40,13 +38,17 @@ public class AverageLocationFinder implements LocationFinder {
 		int weight = 0;
 		double x = 0.0;
 		double y = 0.0;
+		int i = 0;
 		for (MacRssiPair pair : data) {
 			if (knownLocations.containsKey(pair.getMacAsString())) {
-				int signal = MAX_RSSI - pair.getRssi();
+				int signal = pair.getRssi();
 				Position ret = knownLocations.get(pair.getMacAsString());
 				weight += signal;
 				x += signal * ret.getX();
 				y += signal * ret.getY();
+				if (++i >= 3) {
+					break;
+				}
 			}
 		}
 		return new Position(x / weight, y / weight);
@@ -60,7 +62,8 @@ public class AverageLocationFinder implements LocationFinder {
 	 */
 	private void printMacs(MacRssiPair[] data) {
 		for (MacRssiPair pair : data) {
-			System.out.println(pair);
+			System.out.println(pair + ": "
+					+ knownLocations.get(pair.getMacAsString()));
 		}
 	}
 
