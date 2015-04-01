@@ -43,6 +43,7 @@ public class AverageLocationFinder implements LocationFinder {
 		double y = 0.0;
 		int i = 0;
 		for (MacRssiPair pair : data) {
+			// Calculates the average position between the first three points
 			if (knownLocations.containsKey(pair.getMacAsString())) {
 				int signal = pair.getRssi();
 				Position ret = knownLocations.get(pair.getMacAsString());

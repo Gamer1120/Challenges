@@ -46,6 +46,7 @@ public class WeightedLocationFinder implements LocationFinder {
 		for (MacRssiPair pair : data) {
 			String mac = pair.getMacAsString();
 			if (knownLocations.containsKey(mac)) {
+				// Weight based on signal strength
 				int signal = pair.getRssi() + MAX_RSSI;
 				Position ret = knownLocations.get(mac);
 				weight += Math.pow(signal, EXPONENT);

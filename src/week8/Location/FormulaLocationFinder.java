@@ -46,6 +46,7 @@ public class FormulaLocationFinder implements LocationFinder {
 	private Position getDistanceFromList(MacRssiPair[] data) {
 		LinkedHashMap<Position, Double> points = getPoints(data);
 		int i = 0;
+		// Only use the 5 strongest acces points
 		for (Iterator<Entry<Position, Double>> entries = points.entrySet()
 				.iterator(); entries.hasNext();) {
 			entries.next();
@@ -64,6 +65,8 @@ public class FormulaLocationFinder implements LocationFinder {
 			double distance1 = point1.getValue();
 			System.out.println("(" + x1 + "," + y1 + "): " + distance1);
 			entries.remove();
+			// Calculates the average point of the two points when the original
+			// points move torwards each other with the calcultated distance
 			for (Entry<Position, Double> point2 : points.entrySet()) {
 				double x2 = point2.getKey().getX();
 				double y2 = point2.getKey().getY();
@@ -91,6 +94,7 @@ public class FormulaLocationFinder implements LocationFinder {
 		LinkedHashMap<Position, Double> points = new LinkedHashMap<Position, Double>();
 		for (MacRssiPair pair : data) {
 			if (knownLocations.containsKey(pair.getMacAsString())) {
+				// Based on formula if a trend line graphed with excel
 				double distance = MULTIPLIER
 						* Math.pow(Math.E, EXPONENT * pair.getRssi());
 				points.put(knownLocations.get(pair.getMacAsString()), distance);

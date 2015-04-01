@@ -42,6 +42,7 @@ public class BasicLocationFinder implements LocationFinder {
 	private Position getClosestKnownFromList(MacRssiPair[] data) {
 		int signal = Integer.MIN_VALUE;
 		Position ret = new Position(0, 0);
+		// Finds the strongest signal
 		for (MacRssiPair pair : data) {
 			if (pair.getRssi() > signal
 					&& knownLocations.containsKey(pair.getMacAsString())) {

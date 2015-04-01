@@ -58,6 +58,7 @@ public class AverageAverageLocationFinder implements LocationFinder {
 				}
 			}
 		}
+		// The average of the calculated points based on the last 5
 		points.add(new Position(x / weight, y / weight));
 		return getAverageFromPoints();
 	}

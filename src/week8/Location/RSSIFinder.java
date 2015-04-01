@@ -29,7 +29,7 @@ public class RSSIFinder implements LocationFinder {
 
 	@Override
 	public Position locate(MacRssiPair[] data) {
-		printMac(data); // print all the received data
+		printMac(data); // used to print the average rssi of the specified MAC
 		return getAverageFromList(data); // return the first known APs location
 	}
 
