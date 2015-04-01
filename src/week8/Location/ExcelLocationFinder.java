@@ -1,7 +1,12 @@
 package week8.Location;
 
 import java.util.HashMap;
-import week8.Utils.*;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
+import week8.Utils.MacRssiPair;
+import week8.Utils.Position;
+import week8.Utils.Utils;
 
 /**
  * Simple Location finder that returns the first known APs location from the
@@ -35,14 +40,40 @@ public class ExcelLocationFinder implements LocationFinder {
 	 * @return
 	 */
 	private Position getDistanceFromList(MacRssiPair[] data) {
+		HashMap<Position, Double> points = new HashMap<Position, Double>();
 		for (MacRssiPair pair : data) {
 			if (knownLocations.containsKey(pair.getMacAsString())) {
 				double distance = 0.1994 * Math.pow(Math.E,
 						-0.084 * pair.getRssi());
-				System.out.println(distance);
+				points.put(knownLocations.get(pair.getMacAsString()), distance);
 			}
 		}
-		return new Position(20, 25);
+		double x = 0;
+		double y = 0;
+		int amount = 0;
+		for (Iterator<Entry<Position, Double>> entries = points.entrySet()
+				.iterator(); points.size() > 1;) {
+			Entry<Position, Double> point1 = entries.next();
+			double x1 = point1.getKey().getX();
+			double y1 = point1.getKey().getY();
+			double distance1 = point1.getValue();
+			entries.remove();
+			for (Entry<Position, Double> point2 : points.entrySet()) {
+				double x2 = point2.getKey().getX();
+				double y2 = point2.getKey().getY();
+				double distance2 = point2.getValue();
+				double totalDistance = Math.sqrt(Math.pow(x1 - x2, 2)
+						+ Math.pow(y1 - y2, 2));
+				double factor1 = distance1 / totalDistance;
+				double factor2 = distance2 / totalDistance;
+				double posX = (factor1 * (x1 - x2) + factor2 * (x2 - x1)) / 2;
+				double posY = (factor1 * (y1 - y2) + factor2 * (x2 - x1)) / 2;
+				x += posX;
+				y += posY;
+				amount++;
+			}
+		}
+		return new Position(x / amount, y / amount);
 	}
 
 	/**

@@ -1,7 +1,10 @@
 package week8.Location;
 
 import java.util.HashMap;
-import week8.Utils.*;
+
+import week8.Utils.MacRssiPair;
+import week8.Utils.Position;
+import week8.Utils.Utils;
 
 /**
  * Simple Location finder that returns the first known APs location from the
@@ -27,7 +30,7 @@ public class MichaelAverageLocationFinder implements LocationFinder {
 		printMacs(data); // print all the received data
 		return getWeightedDistance(data); // return the first known APs location
 	}
-	
+
 	/**
 	 * Returns the position of the first known AP found in the list of MacRssi
 	 * pairs

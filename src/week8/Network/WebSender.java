@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import week8.Utils.*;
+import week8.Utils.Position;
 
 /**
  * Thread that handles the connection to the server and receives data from it.

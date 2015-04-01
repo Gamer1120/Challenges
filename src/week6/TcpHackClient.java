@@ -1,8 +1,12 @@
 package week6;
 
-import java.io.*;
-import java.net.*;
-import java.util.concurrent.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 class TcpHackClient {
 	public static final String CON_IP = "127.0.0.1";

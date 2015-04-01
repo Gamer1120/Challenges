@@ -1,7 +1,10 @@
 package week8.Location;
 
 import java.util.HashMap;
-import week8.Utils.*;
+
+import week8.Utils.MacRssiPair;
+import week8.Utils.Position;
+import week8.Utils.Utils;
 
 /**
  * Simple Location finder that returns the first known APs location from the

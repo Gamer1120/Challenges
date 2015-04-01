@@ -3,9 +3,12 @@ package week8;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import week8.GUI.Viewer;
-import week8.Location.*;
-import week8.Network.*;
-import week8.Utils.*;
+import week8.Location.ExcelLocationFinder;
+import week8.Location.LocationFinder;
+import week8.Network.DataReceiver;
+import week8.Network.WebSender;
+import week8.Utils.MacRssiPair;
+import week8.Utils.Position;
 
 /**
  * Main class that starts the WlanScanner application
