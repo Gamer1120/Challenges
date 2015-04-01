@@ -22,7 +22,7 @@ public class WlanScanner {
 	public static String webSenderTarget = "netsys.ewi.utwente.nl";
 	
 	//Your group name on the website, don't forget to change this!
-	public static String name = "Change me!";
+	public static String name = "s1401335";
 	
 	//Controls if the position is send to the server for viewing on the website.
 	public static boolean sendToWebsite = true;
@@ -69,6 +69,7 @@ public class WlanScanner {
 				pos.add(tempPos);
 				if(sendToWebsite) sendPos.add(tempPos);
 				System.out.println(tempPos); //When data is available give to the locationFinder
+				System.out.println("-----------------");
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
