@@ -55,7 +55,8 @@ public class NaiveDataTransferProtocol implements IRDTProtocol {
 			}
 
 			// finally, send an empty packet to signal end-of-file.
-			// There is a good chance this will not arrive, and the receiver will never finish.
+			// There is a good chance this will not arrive, and the receiver
+			// will never finish.
 			networkLayer.sendPacket(new Integer[0]);
 		}
 
@@ -66,7 +67,7 @@ public class NaiveDataTransferProtocol implements IRDTProtocol {
 		 */
 		else if (this.role == Role.Receiver) {
 			System.out.println("Receiving...");
-			
+
 			// create the array that will contain the file contents
 			Integer[] fileContents = new Integer[0];
 
@@ -82,7 +83,8 @@ public class NaiveDataTransferProtocol implements IRDTProtocol {
 
 					// if we reached the end of file, stop receiving
 					if (packet.length == 0) {
-						System.out.println("Reached end-of-file. Done receiving.");
+						System.out
+								.println("Reached end-of-file. Done receiving.");
 						stop = true;
 					}
 
@@ -100,8 +102,9 @@ public class NaiveDataTransferProtocol implements IRDTProtocol {
 						// and assign it as the new fileContents
 						fileContents = newFileContents;
 					}
-				}else{
-					// wait ~10ms (or however long the OS makes us wait) before trying again
+				} else {
+					// wait ~10ms (or however long the OS makes us wait) before
+					// trying again
 					try {
 						Thread.sleep(10);
 					} catch (InterruptedException e) {

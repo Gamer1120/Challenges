@@ -92,7 +92,7 @@ public class MyProxy extends PrivacyProxy {
 		}
 		if (content && encoding) {
 			String s = new String(originalBytes);
-			//Filter out privacy sensative javascript
+			// Filter out privacy sensative javascript
 			s = s.replaceAll(" navigator.appCodeName ", " ''unknown'' ");
 			s = s.replaceAll(" navigator.appName ", " 'unknown' ");
 			s = s.replaceAll(" navigator.appVersion ", " 'unknown' ");
@@ -105,7 +105,8 @@ public class MyProxy extends PrivacyProxy {
 			s = s.replaceAll(" navigator.userAgent ", " 'unknown' ");
 			s = s.replaceAll(" screen.height ", " 'unknown' ");
 			s = s.replaceAll(" screen.width ", " 'unknown' ");
-			// Filter out parts of the website that have a name that starts with ad
+			// Filter out parts of the website that have a name that starts with
+			// ad
 			s = removeSubString(s, "<div id=\"ad", "/div>");
 			// Remove the iFrames
 			s = removeSubString(s, "<iframe", "/iframe>");

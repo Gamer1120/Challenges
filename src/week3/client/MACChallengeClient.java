@@ -218,20 +218,16 @@ public class MACChallengeClient implements Runnable {
 
 				if (message.startsWith("FAIL")) {
 					if (message.split(" ").length > 1) {
-						System.err
-								.println("Failure: "
-										+ message.substring(message
-												.indexOf(' ') + 1));
+						System.err.println("Failure: "
+								+ message.substring(message.indexOf(' ') + 1));
 					}
 					clearControlMessage();
 					stopThread = true;
 					simulationStarted = false;
 					simulationFinished = true;
 				} else if (message.startsWith("INFO")) {
-					System.err
-					.println("Info: "
-							+ message.substring(message
-									.indexOf(' ') + 1));
+					System.err.println("Info: "
+							+ message.substring(message.indexOf(' ') + 1));
 				} else if (message.startsWith("START")) {
 					// start the simulation
 					simulationStarted = true;
@@ -291,7 +287,8 @@ public class MACChallengeClient implements Runnable {
 							}
 						}
 					}
-				} else if (message.startsWith("FINISH") || message.startsWith("CLOSED")) {
+				} else if (message.startsWith("FINISH")
+						|| message.startsWith("CLOSED")) {
 					simulationStarted = false;
 					simulationFinished = true;
 				}

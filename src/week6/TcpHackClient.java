@@ -17,7 +17,8 @@ class TcpHackClient {
 		try {
 			new Thread(new Communicator()).start();
 			Thread.sleep(100); // Give the communicator a chance
-		} catch (InterruptedException e) { }
+		} catch (InterruptedException e) {
+		}
 	}
 
 	public void send(byte[] data) {
@@ -36,15 +37,17 @@ class TcpHackClient {
 
 	public byte[] dequeuePacket(long timeout) {
 		Byte[] box;
-		
+
 		try {
 			box = packetQueue.poll(timeout, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) { return new byte[0]; }
-		
+		} catch (InterruptedException e) {
+			return new byte[0];
+		}
+
 		if (box == null) {
 			return new byte[0];
 		}
-		
+
 		byte[] unbox = new byte[box.length];
 		for (int i = 0; i < box.length; i++) {
 			unbox[i] = box[i];
@@ -57,6 +60,7 @@ class TcpHackClient {
 	}
 
 	class Communicator implements Runnable {
+		@Override
 		public void run() {
 			Socket clientSocket = null;
 			try {
@@ -68,13 +72,13 @@ class TcpHackClient {
 					int size = in.readInt();
 					byte[] data = new byte[size];
 					in.read(data, 0, size);
-					
+
 					Byte[] box = new Byte[size];
-					
+
 					for (int i = 0; i < size; i++) {
 						box[i] = data[i];
 					}
-					
+
 					packetQueue.offer(box);
 				}
 			} catch (IOException e) {
@@ -83,7 +87,8 @@ class TcpHackClient {
 				try {
 					if (clientSocket != null)
 						clientSocket.close();
-				} catch (IOException e) { }
+				} catch (IOException e) {
+				}
 			}
 
 			System.err.println("Communicator stopped!");

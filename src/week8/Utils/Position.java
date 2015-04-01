@@ -1,17 +1,19 @@
 package week8.Utils;
+
 /**
- * Represents an position with x and y coordinates
- * The timestamp gets automatically set during creation of the object
+ * Represents an position with x and y coordinates The timestamp gets
+ * automatically set during creation of the object
+ * 
  * @author Bernd
  *
  */
 public class Position {
-	
+
 	private double x;
 	private double y;
 	private long timestamp;
-	
-	public Position(double x, double y){
+
+	public Position(double x, double y) {
 		this.x = x;
 		this.y = y;
 		timestamp = System.currentTimeMillis();
@@ -28,10 +30,10 @@ public class Position {
 	public long getTimestamp() {
 		return timestamp;
 	}
-	
+
 	@Override
-	public String toString(){
-		return "("+x+","+y+")";
+	public String toString() {
+		return "(" + x + "," + y + ")";
 	}
-	
+
 }

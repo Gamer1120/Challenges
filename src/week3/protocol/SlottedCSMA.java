@@ -38,7 +38,8 @@ public class SlottedCSMA implements IMACProtocol {
 				return new TransmissionInfo(TransmissionType.Silent, 0);
 			}
 		} else if (previousMediumState == MediumState.Succes) {
-			// Sender keeps sending until the maximum ammount of packets has been reached
+			// Sender keeps sending until the maximum ammount of packets has
+			// been reached
 			if (send) {
 				packetCount++;
 				if (packetCount < MAX_PACKETS) {

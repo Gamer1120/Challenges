@@ -4,6 +4,7 @@ import java.util.Random;
 
 /**
  * A fairly trivial Medium Access Control scheme.
+ * 
  * @author Jaco ter Braak, Twente University
  * @version 05-12-2013
  */

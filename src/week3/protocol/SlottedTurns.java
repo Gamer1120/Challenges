@@ -51,7 +51,8 @@ public class SlottedTurns implements IMACProtocol {
 				return new TransmissionInfo(TransmissionType.Data,
 						localQueueLength);
 			} else {
-				// Do nothing if it's not your packet and you don't have a larger queue
+				// Do nothing if it's not your packet and you don't have a
+				// larger queue
 				return new TransmissionInfo(TransmissionType.Silent, 0);
 			}
 			// MediumState is Collision
@@ -76,7 +77,8 @@ public class SlottedTurns implements IMACProtocol {
 					return new TransmissionInfo(TransmissionType.Silent, 0);
 				}
 			} else {
-				// Do nothing if you don't have anything to do with the collision
+				// Do nothing if you don't have anything to do with the
+				// collision
 				return new TransmissionInfo(TransmissionType.Silent, 0);
 			}
 		}

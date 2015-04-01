@@ -9,7 +9,6 @@ package week5.client;
 /*
  * 
  * DO NOT EDIT
- * 
  */
 public class LinkLayer {
 	private RoutingChallengeClient client;

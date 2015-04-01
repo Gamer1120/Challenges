@@ -103,7 +103,7 @@ public class Program {
 					protocolThread.start();
 
 					while (client.getSimulationState() == SimulationState.TestRunning) {
-						//wait until finished
+						// wait until finished
 						Thread.sleep(10);
 					}
 
@@ -137,8 +137,8 @@ public class Program {
 
 	private static IRoutingProtocol createProtocol() {
 		try {
-			return protocolImpl.getConstructor(new Class[0])
-					.newInstance(new Object[0]);
+			return protocolImpl.getConstructor(new Class[0]).newInstance(
+					new Object[0]);
 		} catch (InstantiationException | IllegalAccessException
 				| IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {

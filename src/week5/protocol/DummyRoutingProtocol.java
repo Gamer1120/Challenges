@@ -80,7 +80,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 			Integer[] currRow = packetTable.getRow(i);
 			int destination = currRow[0];
 			int nodeCost = currRow[1];
-			//int nextHop = currRow[2];
+			// int nextHop = currRow[2];
 			packetNodes.remove(destination);
 			if (forwardingTable.containsKey(destination)) {
 				ownNodes.remove(destination);
@@ -109,7 +109,7 @@ public class DummyRoutingProtocol implements IRoutingProtocol {
 					sendPacket(neighbour.getKey());
 				}
 			}
-		// if we have a lower cost or a node the sender doesn't have
+			// if we have a lower cost or a node the sender doesn't have
 		} else if (send || !ownNodes.isEmpty()) {
 			sendPacket(address);
 		}

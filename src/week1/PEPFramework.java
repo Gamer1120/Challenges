@@ -42,8 +42,9 @@ public class PEPFramework {
 		}
 
 		try {
-			//serverSocket = new ServerSocket(port);
-			//serverSocket = new ServerSocket(port, 0, InetAddress.getByName("127.0.0.1"));
+			// serverSocket = new ServerSocket(port);
+			// serverSocket = new ServerSocket(port, 0,
+			// InetAddress.getByName("127.0.0.1"));
 			serverSocket = new ServerSocket(port, 0,
 					InetAddress.getByName(null));
 			System.out.println("Started on: " + port);
@@ -53,7 +54,7 @@ public class PEPFramework {
 		}
 
 		while (listening) {
-			//new proxy.PrivacyProxy(serverSocket.accept(), autoFlush).start();
+			// new proxy.PrivacyProxy(serverSocket.accept(), autoFlush).start();
 			new MyProxy(serverSocket.accept(), autoFlush).start();
 		}
 		serverSocket.close();

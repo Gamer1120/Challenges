@@ -19,14 +19,15 @@ import week8.Utils.Position;
 
 /**
  * Shows the map of Spiegel with the current location drawn on it
+ * 
  * @author Bernd
  *
  */
 public class Viewer implements Runnable {
-	
+
 	private LinkedBlockingQueue<Position> pos;
-	
-	public Viewer(LinkedBlockingQueue<Position> pos){
+
+	public Viewer(LinkedBlockingQueue<Position> pos) {
 		this.pos = pos;
 	}
 
@@ -39,24 +40,27 @@ public class Viewer implements Runnable {
 		Image backup;
 		Image point;
 		try {
-			image = ImageIO.read(new File("horst.png")); //ImageIO.read(new File("spiegel_beter.png"));
-			backup = ImageIO.read(new File("horst.png")); //ImageIO.read(new File("spiegel_beter.png"));
+			image = ImageIO.read(new File("horst.png")); // ImageIO.read(new
+															// File("spiegel_beter.png"));
+			backup = ImageIO.read(new File("horst.png")); // ImageIO.read(new
+															// File("spiegel_beter.png"));
 			point = ImageIO.read(new File("point.png"));
 			JLabel label = new JLabel(new ImageIcon(image));
 			JPanel panel = new JPanel(new BorderLayout());
 			panel.add(label);
 			frame.add(panel);
 			frame.setVisible(true);
-			
+
 			Graphics draw = image.getGraphics();
 			draw.setColor(Color.RED);
 
 			Position currentPos;
-			while(true){
+			while (true) {
 				currentPos = pos.take();
 				currentPos = getMapPosition(currentPos);
 				draw.drawImage(backup, 0, 0, null);
-				draw.drawImage(point, (int)currentPos.getX()-5, (int)currentPos.getY()-5, null);
+				draw.drawImage(point, (int) currentPos.getX() - 5,
+						(int) currentPos.getY() - 5, null);
 				label.repaint();
 			}
 
@@ -65,21 +69,23 @@ public class Viewer implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Translates from map grid coordinates to pixel coordinates used for drawing
+	 * Translates from map grid coordinates to pixel coordinates used for
+	 * drawing
+	 * 
 	 * @param pos
 	 * @return
 	 */
-	public static Position getMapPosition(Position pos){
+	public static Position getMapPosition(Position pos) {
 		double x = pos.getX();
-		x = x*10;
+		x = x * 10;
 		x = x + 45;
-		
+
 		double y = pos.getY();
-		y = y*10;
+		y = y * 10;
 		y = y + 44;
-		
-		return new Position(x,y);
+
+		return new Position(x, y);
 	}
 }

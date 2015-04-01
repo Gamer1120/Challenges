@@ -16,6 +16,7 @@ public class SlottedTDMA implements IMACProtocol {
 	private int wait = -1;
 	private Status status = Status.INIT;
 	private LinkedList<Integer> receivedCI = new LinkedList<Integer>();
+
 	// An enum to easily determine the status of the client.
 	private enum Status {
 		INIT, TRIEDTOASSIGN, DIDNOTASSIGN, ASSIGNED
@@ -73,7 +74,8 @@ public class SlottedTDMA implements IMACProtocol {
 				status = Status.DIDNOTASSIGN;
 			}
 		case ASSIGNED:
-			// Once a number is received, 1 packet is sent per client per timeslot.
+			// Once a number is received, 1 packet is sent per client per
+			// timeslot.
 			if (wait == 1) {
 				wait = CLIENT_TOTAL;
 				// No data to send, just be quiet

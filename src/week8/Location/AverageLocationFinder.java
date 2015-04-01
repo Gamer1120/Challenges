@@ -10,14 +10,15 @@ import week8.Utils.*;
  * @author Bernd
  *
  */
-public class BasicLocationFinder implements LocationFinder {
+public class AverageLocationFinder implements LocationFinder {
+	public final static int MAX_RSSI = 100;
 
 	private HashMap<String, Position> knownLocations; // Contains the known
 														// locations of APs. The
 														// long is a MAC
 														// address.
 
-	public BasicLocationFinder() {
+	public AverageLocationFinder() {
 		knownLocations = Utils.getKnownLocations(); // Put the known locations
 													// in our hashMap
 	}
@@ -25,8 +26,7 @@ public class BasicLocationFinder implements LocationFinder {
 	@Override
 	public Position locate(MacRssiPair[] data) {
 		printMacs(data); // print all the received data
-		return getClosestKnownFromList(data); // return the first known APs
-												// location
+		return getAverageFromList(data); // return the first known APs location
 	}
 
 	/**
@@ -36,17 +36,20 @@ public class BasicLocationFinder implements LocationFinder {
 	 * @param data
 	 * @return
 	 */
-	private Position getClosestKnownFromList(MacRssiPair[] data) {
-		int signal = Integer.MIN_VALUE;
-		Position ret = new Position(0, 0);
+	private Position getAverageFromList(MacRssiPair[] data) {
+		int weight = 0;
+		double x = 0.0;
+		double y = 0.0;
 		for (MacRssiPair pair : data) {
-			if (pair.getRssi() > signal
-					&& knownLocations.containsKey(pair.getMacAsString())) {
-				signal = pair.getRssi();
-				ret = knownLocations.get(pair.getMacAsString());
+			if (knownLocations.containsKey(pair.getMacAsString())) {
+				int signal = MAX_RSSI - pair.getRssi();
+				Position ret = knownLocations.get(pair.getMacAsString());
+				weight += signal;
+				x += signal * ret.getX();
+				y += signal * ret.getY();
 			}
 		}
-		return ret;
+		return new Position(x / weight, y / weight);
 	}
 
 	/**

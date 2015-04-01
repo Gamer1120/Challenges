@@ -34,28 +34,29 @@ public abstract class PrivacyProxy extends Thread {
 		log("New connection from client: " + socket.getRemoteSocketAddress());
 	}
 
-	//////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Enhance your proxy by implementing the following three methods:
-	//   - manipulateRequestHeaders
-	//   - onRequest
-	//   - onResponse
+	// - manipulateRequestHeaders
+	// - onRequest
+	// - onResponse
 	//
-	//////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////
 
 	protected abstract HashMap<String, String> onRequest(
 			HashMap<String, String> headers);
 
-	// The number of valid bytes in the buffer is expressed by the inOctets variable
+	// The number of valid bytes in the buffer is expressed by the inOctets
+	// variable
 	protected abstract byte[] onResponse(byte[] originalBytes);
 
-	//////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////
 	//
 	// Helper methods:
-	//  - log:                  print debug output to stdout
-	//  - printSafe:            print the contents of a byte array (in a safe manner)
+	// - log: print debug output to stdout
+	// - printSafe: print the contents of a byte array (in a safe manner)
 	//
-	//////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////
 
 	protected void log(String s) {
 		if (autoFlush) {
@@ -70,11 +71,12 @@ public abstract class PrivacyProxy extends Thread {
 				+ "\n");
 	}
 
-	//////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////
 	//
-	// run() loop of proxy.PrivacyProxy, no need to edit anything below this comment block
+	// run() loop of proxy.PrivacyProxy, no need to edit anything below this
+	// comment block
 	//
-	//////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////
 
 	@Override
 	public void run() {
@@ -94,8 +96,8 @@ public abstract class PrivacyProxy extends Thread {
 			InputStream fromWeb = null;
 			byte[] buffer = new byte[BUFFER_SIZE];
 			inOctets = fromClient.read(buffer, 0, BUFFER_SIZE);
-			//log("from client:");
-			//printSafe(buffer);
+			// log("from client:");
+			// printSafe(buffer);
 			String request = "";
 			if (inOctets != -1) {
 				request = new String(buffer, 0, inOctets);
@@ -105,9 +107,9 @@ public abstract class PrivacyProxy extends Thread {
 			String method = "";
 			String altered = "";
 			String firstLine = "";
-			//while (inOctets != -1) {
-			//request = new String(buffer, 0, inOctets);
-			//altered = onRequest(s);
+			// while (inOctets != -1) {
+			// request = new String(buffer, 0, inOctets);
+			// altered = onRequest(s);
 			// Determine the host to connect to based on the HTTP request
 			if (cnt == 0) {
 				Scanner scanner = new Scanner(request);
@@ -142,7 +144,8 @@ public abstract class PrivacyProxy extends Thread {
 							}
 						}
 					} else {
-						// headers done, but there is still content, should be POST
+						// headers done, but there is still content, should be
+						// POST
 						headersDone = true;
 					}
 					lineCnt++;
@@ -153,10 +156,11 @@ public abstract class PrivacyProxy extends Thread {
 				if (requestHeaders == null) {
 					log("Dropped request");
 					dropped = true;
-					//break;
+					// break;
 				}
 
-				//InetAddress ip = InetAddress.getByName(new URL(urlToCall).getHost());
+				// InetAddress ip = InetAddress.getByName(new
+				// URL(urlToCall).getHost());
 				if (!dropped) {
 					try {
 						URL url = new URL(urlToCall);
@@ -166,7 +170,8 @@ public abstract class PrivacyProxy extends Thread {
 						if (webserverPort == -1) {
 							webserverPort = url.getDefaultPort();
 						}
-						//log("Connecting to " + webserverHost + " on port " + webserverPort);
+						// log("Connecting to " + webserverHost + " on port " +
+						// webserverPort);
 						connectionToServer = new Socket(webserverHost,
 								webserverPort);
 						toWeb = new DataOutputStream(
@@ -189,9 +194,9 @@ public abstract class PrivacyProxy extends Thread {
 
 			cnt++;
 
-			//if(altered.substring(altered.length()-4).equals("\r\n\r\n")){
-			//    requestHeaders = manipulateRequestHeaders(requestHeaders);
-			//    altered = altered.split("\r\n")[0] + "\r\n";
+			// if(altered.substring(altered.length()-4).equals("\r\n\r\n")){
+			// requestHeaders = manipulateRequestHeaders(requestHeaders);
+			// altered = altered.split("\r\n")[0] + "\r\n";
 			if (!dropped) {
 				for (String h : requestHeaders.keySet()) {
 					altered = altered.concat(String.format("%s: %s\r\n", h,
@@ -204,10 +209,10 @@ public abstract class PrivacyProxy extends Thread {
 				String originalPayload = request.split("\r\n\r\n")[1];
 				altered = altered.concat(originalPayload);
 			}
-			//printSafe(buffer);
-			//inOctets = fromClient.read(buffer, 0, BUFFER_SIZE);
-			//totalInOctets += inOctets;
-			//} //end of while
+			// printSafe(buffer);
+			// inOctets = fromClient.read(buffer, 0, BUFFER_SIZE);
+			// totalInOctets += inOctets;
+			// } //end of while
 
 			if (!dropped) {
 				toWeb.write(altered.getBytes());
@@ -226,9 +231,11 @@ public abstract class PrivacyProxy extends Thread {
 
 				inOctets = fromWeb.read(buffer, 0, BUFFER_SIZE);
 				responseHeaders = new HashMap<String, String>();
-				while (inOctets != -1 && !proxyDone) { // TODO rewrite to do-while?
+				while (inOctets != -1 && !proxyDone) { // TODO rewrite to
+														// do-while?
 					String s = new String(buffer, 0, inOctets);
-					// cnt2 is only used to determine whether we are processing headers, or actual data
+					// cnt2 is only used to determine whether we are processing
+					// headers, or actual data
 					if (cnt2 == 0) {
 						Scanner scanner = new Scanner(s);
 						boolean headersDone = false;
@@ -237,7 +244,7 @@ public abstract class PrivacyProxy extends Thread {
 							if (line.startsWith("HTTP/")) {
 								log(line);
 								if (line.contains("200")) {
-									//log("Request was succesful");
+									// log("Request was succesful");
 								} else if (line.contains("301")) {
 									log("Page has moved");
 									moved = true;
@@ -246,7 +253,7 @@ public abstract class PrivacyProxy extends Thread {
 									cached = true;
 								}
 							} else if (line.equals("")) {
-								//log("Reponse: end of headers");
+								// log("Reponse: end of headers");
 								headersDone = true;
 							} else {
 								try {
@@ -283,45 +290,53 @@ public abstract class PrivacyProxy extends Thread {
 
 					if (chunked) {
 						String tmp = new String(buffer);
-						//if(tmp.substring(tmp.length()-7).equals("\r\n0\r\n\r\n")) {
-						//TODO rewrite to regex, \r\n0\r\n.*\r\n$
+						// if(tmp.substring(tmp.length()-7).equals("\r\n0\r\n\r\n"))
+						// {
+						// TODO rewrite to regex, \r\n0\r\n.*\r\n$
 						if (tmp.contains("\r\n0\r\n")) {
-							//printSafe(buffer);
-							//log("chunking, got 0, done!");
+							// printSafe(buffer);
+							// log("chunking, got 0, done!");
 							//
 							proxyDone = true;
 							break;
 						}
 					}
-					//try {
-					//    byte[] alteredBytes = onResponse(buffer);
-					//    toClient.write(alteredBytes, 0, inOctets); //TODO double test me, was 'inOctets'
-					//    toClient.flush();
-					//}catch (IOException e) {
-					//    log("Connection to the client seems lost: " + e.getMessage());
-					//    break;
-					//}
+					// try {
+					// byte[] alteredBytes = onResponse(buffer);
+					// toClient.write(alteredBytes, 0, inOctets); //TODO double
+					// test me, was 'inOctets'
+					// toClient.flush();
+					// }catch (IOException e) {
+					// log("Connection to the client seems lost: " +
+					// e.getMessage());
+					// break;
+					// }
 					System.arraycopy(buffer, 0, rsp_buffer, contentSent,
 							inOctets);
 					contentSent += inOctets;
-					// public static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
+					// public static void arraycopy(Object src, int srcPos,
+					// Object dest, int destPos, int length)
 					if (contentSent >= contentLength + sizeOfHeaders
 							&& !chunked || cached) {
-						//log("satisfied, calling break;");
-						//log("contentSent : " + Integer.toString(contentSent));
-						//log("contentLength + headerLength: " + Integer.toString(contentLength) + " + " + sizeOfHeaders);
+						// log("satisfied, calling break;");
+						// log("contentSent : " +
+						// Integer.toString(contentSent));
+						// log("contentLength + headerLength: " +
+						// Integer.toString(contentLength) + " + " +
+						// sizeOfHeaders);
 						proxyDone = true;
 						break;
 					}
 					if (moved) {
-						//log("page was moved, proxied 304, breaking this connection");
+						// log("page was moved, proxied 304, breaking this connection");
 						proxyDone = true;
 						break;
 					}
 
-					//toClient.flush();
+					// toClient.flush();
 					try {
-						//buffer = new byte[BUFFER_SIZE]; //TODO is this really necessary?
+						// buffer = new byte[BUFFER_SIZE]; //TODO is this really
+						// necessary?
 						inOctets = fromWeb.read(buffer, 0, BUFFER_SIZE);
 						if (inOctets == -1) {
 							proxyDone = true;
@@ -338,12 +353,16 @@ public abstract class PrivacyProxy extends Thread {
 				}
 				// now actually proxy the completed response to the client
 				try {
-					//log("going to proxy this buffer:");
-					//log("is it the same as:");
-					//printSafe(buffer);
+					// log("going to proxy this buffer:");
+					// log("is it the same as:");
+					// printSafe(buffer);
 					byte[] alteredBytes = onResponse(rsp_buffer);
-					//toClient.write(alteredBytes, 0, inOctets); //TODO double test me, was 'inOctets'
-					toClient.write(alteredBytes, 0, contentSent); //TODO double test me, was 'inOctets'
+					// toClient.write(alteredBytes, 0, inOctets); //TODO double
+					// test me, was 'inOctets'
+					toClient.write(alteredBytes, 0, contentSent); // TODO double
+																	// test me,
+																	// was
+																	// 'inOctets'
 					toClient.flush();
 				} catch (IOException e) {
 					log("Connection to the client seems lost: "

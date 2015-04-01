@@ -48,27 +48,28 @@ public class Program implements Runnable {
 		if (args.length > 0) {
 			group = Integer.parseInt(args[0]);
 		}
-		
+
 		MACChallengeClient client = null;
 		try {
 			System.out.print("Starting client... ");
-			
+
 			// Create the client
 			client = new MACChallengeClient(serverAddress, serverPort, group,
 					password);
 
 			System.out.println("Done.");
-			
+
 			// Set protocol
 			client.setListener(protocol);
 
 			System.out.println("Press Enter to start the simulation...");
 			System.out
 					.println("(Simulation will also be started automatically if another client in the group issues the start command)");
-		
+
 			boolean startCommand = false;
 			InputStream inputStream = new BufferedInputStream(System.in);
-			while (!client.isSimulationStarted() && !client.isSimulationFinished()) {
+			while (!client.isSimulationStarted()
+					&& !client.isSimulationFinished()) {
 				if (!startCommand && inputStream.available() > 0) {
 					client.requestStart();
 					startCommand = true;
@@ -106,7 +107,7 @@ public class Program implements Runnable {
 	}
 
 	private Integer groupId2;
-	
+
 	public Program(int groupId) {
 		this.groupId2 = groupId;
 	}
@@ -115,7 +116,7 @@ public class Program implements Runnable {
 	public void run() {
 		start(groupId2);
 	}
-	
+
 	public static void start(Integer id) {
 		main(new String[] { id.toString() });
 	}

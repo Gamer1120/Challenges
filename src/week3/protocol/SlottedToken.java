@@ -97,7 +97,8 @@ public class SlottedToken implements IMACProtocol {
 
 	private TransmissionInfo transmission(int localQueueLength) {
 		int number = myNumber;
-		// If the maximum amount of packets have been reached or there is only one packet left
+		// If the maximum amount of packets have been reached or there is only
+		// one packet left
 		if (++packetCount == MAX_PACKETS || localQueueLength <= 1) {
 			// Pass the token to the next client
 			number++;
