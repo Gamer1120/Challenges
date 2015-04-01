@@ -15,7 +15,7 @@ import week8.Utils.Utils;
  * @author Bernd
  *
  */
-public class FormulaLocationFinder implements LocationFinder {
+public class FormulaLocationFinder2 implements LocationFinder {
 	public final static double MULTIPLIER = 0.1994;
 	public final static double EXPONENT = -0.084;
 
@@ -24,7 +24,7 @@ public class FormulaLocationFinder implements LocationFinder {
 														// long is a MAC
 														// address.
 
-	public FormulaLocationFinder() {
+	public FormulaLocationFinder2() {
 		knownLocations = Utils.getKnownLocations(); // Put the known locations
 													// in our hashMap
 	}
@@ -44,38 +44,49 @@ public class FormulaLocationFinder implements LocationFinder {
 	 */
 	private Position getDistanceFromList(MacRssiPair[] data) {
 		HashMap<Position, Double> points = getPoints(data);
-		double x = 0;
-		double y = 0;
-		int amount = 0;
+		double totalX = 0;
+		double totalY = 0;
+		int total = 0;
+		double currX = 0;
+		double currY = 0;
+		boolean first = true;
 		for (Iterator<Entry<Position, Double>> entries = points.entrySet()
-				.iterator(); points.size() > 1;) {
-			Entry<Position, Double> point1 = entries.next();
-			double x1 = point1.getKey().getX();
-			double y1 = point1.getKey().getY();
-			double distance1 = point1.getValue();
-			System.out.println("(" + x1 + "," + y1 + "): " + distance1);
-			entries.remove();
-			for (Entry<Position, Double> point2 : points.entrySet()) {
-				double x2 = point2.getKey().getX();
-				double y2 = point2.getKey().getY();
-				double distance2 = point2.getValue();
-				System.out.println("(" + x2 + "," + y2 + "): " + distance2);
-				double totalDistance = Math.sqrt(Math.pow(x1 - x2, 2)
-						+ Math.pow(y1 - y2, 2));
-				double factor1 = distance1 / totalDistance;
-				double factor2 = distance2 / totalDistance;
-				double diffX1 = factor1 * (x1 - x2);
-				double diffY1 = factor1 * (y1 - y2);
-				double diffX2 = factor2 * (x2 - x1);
-				double diffY2 = factor2 * (y2 - y1);
-				System.out.println("x: " + (x1 + diffX1 + x2 + diffX2) / 2);
-				System.out.println("y: " + (y1 + diffY1 + y2 + diffY2) / 2);
-				x += (x1 + diffX1 + x2 + diffX2) / 2;
-				y += (y1 + diffY1 + y2 + diffY2) / 2;
-				amount++;
+				.iterator(); entries.hasNext();) {
+			Entry<Position, Double> point = entries.next();
+			double pointX = point.getKey().getX();
+			double pointY = point.getKey().getY();
+			double pointDistance = point.getValue();
+			if (first) {
+				first = false;
+				point = entries.next();
+				double pointX2 = point.getKey().getX();
+				double pointY2 = point.getKey().getY();
+				double pointDistance2 = point.getValue();
+				double totalDistance = Math.sqrt(Math.pow(pointX - pointX2, 2)
+						+ Math.pow(pointY - pointY2, 2));
+				double factor = pointDistance / totalDistance;
+				double factor2 = pointDistance2 / totalDistance;
+				double diffX = factor * (pointX - pointX2);
+				double diffY = factor * (pointY - pointY2);
+				double diffX2 = factor2 * (pointX2 - pointX);
+				double diffY2 = factor2 * (pointY2 - pointY);
+				totalX += (pointX + diffX + pointX2 + diffX2) / 2;
+				totalY += (pointY + diffY + pointY2 + diffY2) / 2;
+				total++;
+			} else {
+				double totalDistance = Math.sqrt(Math.pow(pointX - currX, 2)
+						+ Math.pow(pointY - currY, 2));
+				double factor = pointDistance / totalDistance;
+				double diffX = factor * (pointX - currX);
+				double diffY = factor * (pointY - currY);
+				totalX += (pointX + diffX + currX) / 2;
+				totalY += (pointY + diffY + currY) / 2;
+				total++;
 			}
+			currX = totalX / total;
+			currY = totalY / total;
 		}
-		return new Position(x / amount, y / amount);
+		return new Position(currX, currY);
 	}
 
 	private HashMap<Position, Double> getPoints(MacRssiPair[] data) {
