@@ -1,0 +1,9 @@
+1)	(Windows) start WlanScanner.exe.
+	(Linux) start wlanScan: "java wlanScan.wlanScan name" where name is the name of your wireless interface.
+	(Both programs can be kept running, they do not perform any action unless a client connects)
+
+2) 	Change your group name and start the java code.
+
+- horst.png contains the map of the noord horst overlayed with the coordinate system we use.
+- horstoverlay.png contains the map with the possition of all access point overlayed on it.
+- The positions used in the code can be found in Utils.java in the Utils package.
