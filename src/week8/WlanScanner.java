@@ -3,8 +3,7 @@ package week8;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import week8.GUI.Viewer;
-import week8.Location.FormulaLocationFinder2;
-import week8.Location.LocationFinder;
+import week8.Location.*;
 import week8.Network.DataReceiver;
 import week8.Network.WebSender;
 import week8.Utils.MacRssiPair;
@@ -36,7 +35,7 @@ public class WlanScanner {
 
 	// The LocationFinder that is to be used. Replace this with your own
 	// implementation!
-	public LocationFinder locationHandler = new FormulaLocationFinder2();
+	public LocationFinder locationHandler = new AverageAverageLocationFinder();
 
 	// /////////// Do not edit below this line! ////////////////
 

@@ -2,6 +2,7 @@ package week8.Location;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 import week8.Utils.MacRssiPair;
@@ -43,7 +44,15 @@ public class FormulaLocationFinder implements LocationFinder {
 	 * @return
 	 */
 	private Position getDistanceFromList(MacRssiPair[] data) {
-		HashMap<Position, Double> points = getPoints(data);
+		LinkedHashMap<Position, Double> points = getPoints(data);
+		int i = 0;
+		for (Iterator<Entry<Position, Double>> entries = points.entrySet()
+				.iterator(); entries.hasNext();) {
+			entries.next();
+			if (++i >= 5) {
+				entries.remove();
+			}
+		}
 		double x = 0;
 		double y = 0;
 		int amount = 0;
@@ -78,8 +87,8 @@ public class FormulaLocationFinder implements LocationFinder {
 		return new Position(x / amount, y / amount);
 	}
 
-	private HashMap<Position, Double> getPoints(MacRssiPair[] data) {
-		HashMap<Position, Double> points = new HashMap<Position, Double>();
+	private LinkedHashMap<Position, Double> getPoints(MacRssiPair[] data) {
+		LinkedHashMap<Position, Double> points = new LinkedHashMap<Position, Double>();
 		for (MacRssiPair pair : data) {
 			if (knownLocations.containsKey(pair.getMacAsString())) {
 				double distance = MULTIPLIER
