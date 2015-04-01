@@ -15,13 +15,16 @@ import week8.Utils.Utils;
  * @author Bernd
  *
  */
-public class SvenLocationFinder implements LocationFinder {
+public class FormulaLocationFinder implements LocationFinder {
+	public final static double MULTIPLIER = 0.1994;
+	public final static double EXPONENT = -0.084;
+
 	private HashMap<String, Position> knownLocations; // Contains the known
 														// locations of APs. The
 														// long is a MAC
 														// address.
 
-	public SvenLocationFinder() {
+	public FormulaLocationFinder() {
 		knownLocations = Utils.getKnownLocations(); // Put the known locations
 													// in our hashMap
 	}
@@ -40,14 +43,7 @@ public class SvenLocationFinder implements LocationFinder {
 	 * @return
 	 */
 	private Position getDistanceFromList(MacRssiPair[] data) {
-		HashMap<Position, Double> points = new HashMap<Position, Double>();
-		for (MacRssiPair pair : data) {
-			if (knownLocations.containsKey(pair.getMacAsString())) {
-				double distance = 0.1994 * Math.pow(Math.E,
-						-0.084 * pair.getRssi());
-				points.put(knownLocations.get(pair.getMacAsString()), distance);
-			}
-		}
+		HashMap<Position, Double> points = getPoints(data);
 		double x = 0;
 		double y = 0;
 		int amount = 0;
@@ -76,6 +72,18 @@ public class SvenLocationFinder implements LocationFinder {
 			}
 		}
 		return new Position(x / amount, y / amount);
+	}
+
+	private HashMap<Position, Double> getPoints(MacRssiPair[] data) {
+		HashMap<Position, Double> points = new HashMap<Position, Double>();
+		for (MacRssiPair pair : data) {
+			if (knownLocations.containsKey(pair.getMacAsString())) {
+				double distance = MULTIPLIER
+						* Math.pow(Math.E, EXPONENT * pair.getRssi());
+				points.put(knownLocations.get(pair.getMacAsString()), distance);
+			}
+		}
+		return points;
 	}
 
 	/**
