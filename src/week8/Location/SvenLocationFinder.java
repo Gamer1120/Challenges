@@ -15,13 +15,13 @@ import week8.Utils.Utils;
  * @author Bernd
  *
  */
-public class ExcelLocationFinder implements LocationFinder {
+public class SvenLocationFinder implements LocationFinder {
 	private HashMap<String, Position> knownLocations; // Contains the known
 														// locations of APs. The
 														// long is a MAC
 														// address.
 
-	public ExcelLocationFinder() {
+	public SvenLocationFinder() {
 		knownLocations = Utils.getKnownLocations(); // Put the known locations
 													// in our hashMap
 	}
@@ -66,10 +66,12 @@ public class ExcelLocationFinder implements LocationFinder {
 						+ Math.pow(y1 - y2, 2));
 				double factor1 = distance1 / totalDistance;
 				double factor2 = distance2 / totalDistance;
-				double posX = (factor1 * (x1 - x2) + factor2 * (x2 - x1)) / 2;
-				double posY = (factor1 * (y1 - y2) + factor2 * (x2 - x1)) / 2;
-				x += posX;
-				y += posY;
+				double diffX1 = factor1 * (x1 - x2);
+				double diffY1 = factor1 * (y1 - y2);
+				double diffX2 = factor2 * (x2 - x1);
+				double diffY2 = factor2 * (x2 - x1);
+				x += (x1 + diffX1 + x2 + diffX2) / 2;
+				y += (y1 + diffY1 + y2 + diffY2) / 2;
 				amount++;
 			}
 		}
