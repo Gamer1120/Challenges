@@ -33,7 +33,7 @@ public class WlanScanner {
 
 	// The LocationFinder that is to be used. Replace this with your own
 	// implementation!
-	public LocationFinder locationHandler = new AverageLocationFinder();
+	public LocationFinder locationHandler = new RSSIFinder();
 
 	// /////////// Do not edit below this line! ////////////////
 
