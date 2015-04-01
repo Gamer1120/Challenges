@@ -105,6 +105,7 @@ class LongestPrefixMatcher {
 	 *            The IP address to convert
 	 * @return The String representation for the IP (as xxx.xxx.xxx.xxx)
 	 */
+	@SuppressWarnings("unused")
 	private String ipToHuman(int ip) {
 		return Integer.toString(ip >> 24 & 0xff) + "."
 				+ Integer.toString(ip >> 16 & 0xff) + "."

@@ -1,7 +1,5 @@
 package week6;
 
-import java.util.Arrays;
-
 class MyTcpHandler extends TcpHandler {
 
 	// IPv6 header
